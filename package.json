@@ -1,0 +1,27 @@
+{
+  "name": "hoye-bot",
+  "version": "1.0.0",
+  "description": "Bot Discord de protection (anti-nuke, anti-raid, anti-spam) avec Components V2 et commandes slash",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "deploy": "node src/deploy.js",
+    "check": "node scripts/check.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ownhoye/hoye-bot-discord.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ownhoye/hoye-bot-discord/issues"
+  },
+  "homepage": "https://github.com/ownhoye/hoye-bot-discord#readme",
+  "dependencies": {
+    "discord.js": "^14.27.0",
+    "dotenv": "^17.4.2"
+  },
+  "engines": {
+    "node": ">=18.17"
+  }
+}
