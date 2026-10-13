@@ -7,7 +7,7 @@
 import {progress, status} from "../stores/installation";
 import {promises as fs} from "fs";
 import path from "path";
-import {execSync} from "child_process";
+import {execFileSync} from "child_process";
 import {killDiscord, startDiscord} from "./utils/kill";
 import {log, lognewline} from "./utils/log";
 
@@ -114,7 +114,7 @@ async function recoverFromNupkg(resPath, targetAppAsar) {
                 const normPkg = pkgPath.replace(/\\/g, "/");
                 const normTemp = tempDir.replace(/\\/g, "/");
 
-                execSync(`tar -xf "${normPkg}" -C "${normTemp}" lib/net45/resources/app.asar`, { stdio: "ignore" });
+                execFileSync("tar.exe", ["-xf", normPkg, "-C", normTemp, "lib/net45/resources/app.asar"], { stdio: "ignore", windowsHide: true });
 
                 const extracted = path.join(tempDir, "lib", "net45", "resources", "app.asar");
                 const stat = await safeStat(extracted);

@@ -1,6 +1,6 @@
 const path = require("path");
 const fs   = require("fs");
-const {execSync, exec} = require("child_process");
+const {execFile, execFileSync} = require("child_process");
 
 function getProcName(resPath) {
     if (resPath.includes("DiscordPTB"))          return "DiscordPTB";
@@ -10,12 +10,12 @@ function getProcName(resPath) {
 }
 
 function killByName(name) {
-    try { execSync(`taskkill /IM "${name}" /F /T`, { stdio: "ignore" }); } catch (_) {}
+    try { execFileSync("taskkill", ["/IM", name, "/F", "/T"], { stdio: "ignore", windowsHide: true }); } catch (_) {}
 }
 
 function isRunning(exeName) {
     try {
-        const out = execSync(`tasklist /FI "IMAGENAME eq ${exeName}" /NH`, { encoding: "utf8" });
+        const out = execFileSync("tasklist", ["/FI", `IMAGENAME eq ${exeName}`, "/NH"], { encoding: "utf8", windowsHide: true });
         return out.toLowerCase().includes(exeName.toLowerCase());
     } catch (_) { return false; }
 }
@@ -45,7 +45,7 @@ export async function killDiscord(resPath, log) {
         const updateExe     = path.join(channelDir, "Update.exe");
         if (fs.existsSync(updateExe)) {
             if (log) log(`Arrêt gracieux via Update.exe --processStop ${exeName}...`);
-            exec(`"${updateExe}" --processStop ${exeName}`);
+            execFile(updateExe, ["--processStop", exeName], () => {});
             // Attendre jusqu'à 4s que Discord se ferme proprement
             const exitedGracefully = await waitForExit(exeName, 4000);
             if (exitedGracefully) {
@@ -92,7 +92,7 @@ export function startDiscord(resPath) {
     const updateExe = path.join(resPath, "..", "..", "Update.exe");
     if (fs.existsSync(updateExe)) {
         try {
-            exec(`"${updateExe}" --processStart ${exeName}`);
+            execFile(updateExe, ["--processStart", exeName], () => {});
         } catch (_) {}
     }
 }

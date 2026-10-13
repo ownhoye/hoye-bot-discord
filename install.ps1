@@ -5,6 +5,8 @@
 
 $ErrorActionPreference = "Stop"
 $ProgressPreference    = "SilentlyContinue"
+# Windows PowerShell 5.1 defaults to TLS 1.0, which GitHub rejects
+[Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 
 $GiteaUrl     = "https://source.nightcord.st"
 $GiteaRepo    = "lolicord/lolicord"
@@ -58,8 +60,7 @@ try {
     $version = $release.tag_name
     Write-OK "Dernière version trouvée : $version"
 } catch {
-    $version = "latest"
-    Write-OK "Utilisation de la version : $version"
+    Write-Fail "Impossible de contacter GitHub ($apiUrl) : $_"
 }
 
 # ── [2/3] Télécharger LoliCord-Installer ou LoliCord-Dist ────────────────────
@@ -104,18 +105,36 @@ if (Test-Path $InstallerExe) {
         "$env:LOCALAPPDATA\DiscordPTB",
         "$env:LOCALAPPDATA\DiscordDevelopment"
     )
+    $patcher = (Join-Path $DistDir "patcher.js") -replace "\\", "/"
+    $injected = $false
     foreach ($disc in $discordPaths) {
-        if (Test-Path $disc) {
-            $appDirs = Get-ChildItem -Path $disc -Directory -Filter "app-*" | Sort-Object Name -Descending
-            if ($appDirs.Count -gt 0) {
-                $target = Join-Path $appDirs[0].FullName "resources\app"
-                New-Item -ItemType Directory -Force -Path $target | Out-Null
-                Copy-Item -Path "$DistDir\*" -Destination $target -Recurse -Force
-                Set-Content -Path (Join-Path $target "package.json") -Value '{"name":"discord","main":"patcher.js"}'
-                Write-OK "Injecté dans : $($appDirs[0].Name)"
-            }
-        }
+        if (-not (Test-Path $disc)) { continue }
+        $appDirs = @(Get-ChildItem -Path $disc -Directory -Filter "app-*" |
+            Sort-Object { [version]($_.Name -replace "^app-", "") } -Descending)
+        if ($appDirs.Count -eq 0) { continue }
+
+        $exeName   = (Split-Path $disc -Leaf) + ".exe"
+        $resources = Join-Path $appDirs[0].FullName "resources"
+        $appAsar   = Join-Path $resources "app.asar"
+        $backup    = Join-Path $resources "_app.asar"
+        $target    = Join-Path $resources "app"
+
+        Get-Process -Name ($exeName -replace "\.exe$", "") -ErrorAction SilentlyContinue | Stop-Process -Force
+        Start-Sleep -Seconds 2
+
+        # Discord loads app.asar before app\ : move it aside, the patcher loads it as _app.asar
+        if ((Test-Path $appAsar) -and -not (Test-Path $backup)) { Move-Item $appAsar $backup }
+        New-Item -ItemType Directory -Force -Path $target | Out-Null
+        # WriteAllText: no BOM (Windows PowerShell's -Encoding UTF8 adds one, which breaks JSON parsing)
+        [IO.File]::WriteAllText((Join-Path $target "package.json"), '{"name":"discord","main":"index.js"}')
+        [IO.File]::WriteAllText((Join-Path $target "index.js"), "require($(ConvertTo-Json $patcher));")
+        Write-OK "Injecté dans : $($appDirs[0].Name)"
+        $injected = $true
+
+        $updateExe = Join-Path $disc "Update.exe"
+        if (Test-Path $updateExe) { Start-Process -FilePath $updateExe -ArgumentList "--processStart", $exeName }
     }
+    if (-not $injected) { Write-Fail "Discord est introuvable. Installez Discord depuis https://discord.com/download puis relancez." }
 }
 
 Write-Host ""

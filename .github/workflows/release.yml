@@ -3,7 +3,11 @@ name: Build & Release LoliCord
 on:
   push:
     tags:
-      - "v*"          # déclenché sur : git tag v1.0.0 && git push --tags
+      - "v*"          # publie une release : git tag v1.0.0 && git push --tags
+    branches:
+      - main
+      - "claude/**"   # build de test : l'installeur est téléchargeable dans l'onglet Actions
+  workflow_dispatch:
 
 permissions:
   contents: write    # nécessaire pour créer la GitHub Release
@@ -33,13 +37,6 @@ jobs:
 
       - name: Build Equicord renderer (standalone)
         run: pnpm buildStandalone
-
-      - name: Build & Package Electron
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          node electron-builder.config.cjs || true
-          npx electron-builder --config electron-builder.config.cjs --win --publish always
 
       - name: Package lolicord-dist.zip
         shell: pwsh
@@ -81,6 +78,9 @@ jobs:
           }
 
           Compress-Archive -Path "$staging\*" -DestinationPath "lolicord-dist.zip" -Force
+
+          # Mode standalone : le client télécharge releases/latest/download/LoliCord.asar
+          Copy-Item "dist\lolicord.asar" "LoliCord.asar"
           Write-Host "lolicord-dist.zip created ($($(Get-Item lolicord-dist.zip).Length / 1MB) MB)"
 
       - name: Build LoliCord-Installer.exe
@@ -90,12 +90,25 @@ jobs:
           npm run compile
           npx electron-builder --win -p never
 
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: LoliCord-${{ github.sha }}
+          path: |
+            release/installer/LoliCord-Installer.exe
+            lolicord-dist.zip
+            dist/desktop.asar
+            LoliCord.asar
+          if-no-files-found: error
+
       - name: Upload lolicord-dist.zip to Release
+        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           files: |
             lolicord-dist.zip
             dist/desktop.asar
+            LoliCord.asar
             release/installer/LoliCord-Installer.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

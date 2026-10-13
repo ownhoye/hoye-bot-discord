@@ -5,9 +5,17 @@ import {createWriteStream} from "fs";
 import path from "path";
 import phin from "phin";
 import https from "https";
-import {execSync} from "child_process";
+import {execFileSync} from "child_process";
 import {killDiscord, startDiscord} from "./utils/kill";
 import {log, lognewline} from "./utils/log";
+
+// Single-quoted PowerShell literal: works with any path/URL, including apostrophes in usernames.
+const psQuote = (s) => `'${String(s).replace(/'/g, "''")}'`;
+const runPowerShell = (command, options = {}) => execFileSync(
+    "powershell.exe",
+    ["-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", `[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; ${command}`],
+    {windowsHide: true, ...options}
+);
 
 const MAKE_DIR_PROGRESS = 5;
 const FETCH_RELEASE_PROGRESS = 15;
@@ -127,13 +135,12 @@ function fetchJsonWithFallback(url) {
     return new Promise((resolve, reject) => {
         function fallbackPowerShell(originalErr) {
             try {
-                const psCmd = `[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls13; (Invoke-WebRequest -Uri '${url}' -UseBasicParsing -Headers @{'User-Agent'='LoliCord-Installer/3.0'; 'Accept'='application/json'}).Content`;
-                const out = execSync(`powershell.exe -NoProfile -Command "${psCmd}"`, { encoding: "utf8", timeout: 15000 });
+                const out = runPowerShell(`(Invoke-WebRequest -Uri ${psQuote(url)} -UseBasicParsing -Headers @{'User-Agent'='LoliCord-Installer/3.0'; 'Accept'='application/json'}).Content`, { encoding: "utf8", timeout: 15000 });
                 const parsed = JSON.parse(out.trim());
                 resolve(parsed);
             } catch (psErr) {
                 try {
-                    const curlOut = execSync(`curl.exe -skL -H "User-Agent: LoliCord-Installer/3.0" -H "Accept: application/json" "${url}"`, { encoding: "utf8", timeout: 15000 });
+                    const curlOut = execFileSync("curl.exe", ["-sSfL", "-H", "User-Agent: LoliCord-Installer/3.0", "-H", "Accept: application/json", url], { encoding: "utf8", timeout: 15000, windowsHide: true });
                     const parsed = JSON.parse(curlOut.trim());
                     resolve(parsed);
                 } catch (curlErr) {
@@ -148,8 +155,7 @@ function fetchJsonWithFallback(url) {
                 headers: {
                     "User-Agent": "LoliCord-Installer/3.0",
                     "Accept": "application/json"
-                },
-                rejectUnauthorized: false
+                }
             }, (res) => {
                 if (res.statusCode === 301 || res.statusCode === 302 || res.statusCode === 307 || res.statusCode === 308) {
                     const loc = res.headers.location;
@@ -198,12 +204,11 @@ function downloadFileAsync(url, destPath, onProgress) {
             try { file.close(); } catch {}
             try {
                 log("⚡ Using system network stack fallback...");
-                const psCmd = `[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls13; Invoke-WebRequest -Uri '${url}' -OutFile '${destPath}' -UseBasicParsing`;
-                execSync(`powershell.exe -NoProfile -Command "${psCmd}"`, { timeout: 120000 });
+                runPowerShell(`Invoke-WebRequest -Uri ${psQuote(url)} -OutFile ${psQuote(destPath)} -UseBasicParsing`, { timeout: 300000 });
                 resolve();
             } catch (psErr) {
                 try {
-                    execSync(`curl.exe -skL "${url}" -o "${destPath}"`, { timeout: 120000 });
+                    execFileSync("curl.exe", ["-sSfL", url, "-o", destPath], { timeout: 300000, windowsHide: true });
                     resolve();
                 } catch (curlErr) {
                     reject(origErr || psErr || curlErr);
@@ -214,8 +219,7 @@ function downloadFileAsync(url, destPath, onProgress) {
         try {
             const client = url.startsWith("https") ? https : http;
             const req = client.get(url, {
-                headers: { "User-Agent": "LoliCord-Installer/3.0" },
-                rejectUnauthorized: false
+                headers: { "User-Agent": "LoliCord-Installer/3.0" }
             }, (response) => {
                 if (response.statusCode === 301 || response.statusCode === 302 || response.statusCode === 307 || response.statusCode === 308) {
                     file.close();
@@ -266,7 +270,7 @@ function downloadFileAsync(url, destPath, onProgress) {
 }
 
 async function downloadDist() {
-    log("Fetching latest release information from Gitea...");
+    log("Fetching latest release information from GitHub...");
     let assetUrl;
     let lolicordVersion;
     try {
@@ -309,7 +313,12 @@ async function downloadDist() {
         try { await fs.rm(distDir, { recursive: true, force: true }); } catch {}
         await fs.mkdir(distDir, { recursive: true });
         
-        execSync(`powershell.exe -NoProfile -Command "Expand-Archive -Path '${tmpZip}' -DestinationPath '${distDir}' -Force"`);
+        try {
+            runPowerShell(`Expand-Archive -LiteralPath ${psQuote(tmpZip)} -DestinationPath ${psQuote(distDir)} -Force`, { timeout: 300000 });
+        } catch (psErr) {
+            // tar.exe ships with Windows 10 1803+ and works where PowerShell is restricted
+            execFileSync("tar.exe", ["-xf", tmpZip, "-C", distDir], { timeout: 300000, windowsHide: true });
+        }
         log("✅ Package extracted successfully");
         progress.set(EXTRACTION_PROGRESS);
         

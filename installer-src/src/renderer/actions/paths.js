@@ -30,6 +30,17 @@ export const locations = {stable: "", ptb: "", canary: ""};
  *       var resources = Path.Combine(dir, "resources");
  *       if (Directory.Exists(resources)) → add to list
  */
+// "1.0.10000" > "1.0.9200": compare numerically, not alphabetically
+const compareVersions = (a, b) => {
+    const pa = a.split(".").map(n => parseInt(n, 10) || 0);
+    const pb = b.split(".").map(n => parseInt(n, 10) || 0);
+    for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+        const diff = (pa[i] || 0) - (pb[i] || 0);
+        if (diff) return diff;
+    }
+    return 0;
+};
+
 const getDiscordPath = (channel) => {
     try {
         const channelDir = channelDirs[channel];
@@ -47,8 +58,7 @@ const getDiscordPath = (channel) => {
         // Find all app-X.X.XXXX directories, take the latest
         const versions = fs.readdirSync(basedir)
             .filter(f => f.startsWith("app-") && fs.lstatSync(path.join(basedir, f)).isDirectory())
-            .sort()
-            .reverse();
+            .sort((a, b) => compareVersions(b.slice(4), a.slice(4)));
         if (!versions.length) return "";
 
         const resources = path.join(basedir, versions[0], "resources");
