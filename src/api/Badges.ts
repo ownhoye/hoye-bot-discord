@@ -128,6 +128,7 @@ export function _getBadges(args: any) {
     const equicordDonorBadges = BadgeAPIPlugin.getEquicordDonorBadges(userId);
     const lolicordBadges = (BadgeAPIPlugin as any).getLoliCordBadges?.(userId);
     const illegalcordBadges = (BadgeAPIPlugin as any).getIllegalcordBadges?.(userId);
+    const ownBadges = (BadgeAPIPlugin as any).getOwnBadges?.(userId);
 
     if (donorBadges && !isHidden("vencord")) {
         badges.unshift(...donorBadges.map(shieldBadge));
@@ -143,6 +144,10 @@ export function _getBadges(args: any) {
 
     if (illegalcordBadges && !isHidden("illegalcord")) {
         badges.unshift(...illegalcordBadges.map(shieldBadge));
+    }
+
+    if (ownBadges && !isHidden("lolicord")) {
+        badges.unshift(...ownBadges.map(shieldBadge));
     }
 
     const seen = new Set<string>();

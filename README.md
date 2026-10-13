@@ -83,6 +83,25 @@ from the latest release of this repository.
 
 ---
 
+## Badges
+
+LoliCord loads its own badge list from [`badges.json`](./badges.json) at startup
+(and every 30 minutes). To give someone a badge, add their Discord user ID with a
+tooltip and an image URL, then push to `main` — no new release is needed:
+
+```json
+{
+    "1403456424461467708": [
+        { "tooltip": "LoliCord Owner", "badge": "https://raw.githubusercontent.com/ownhoye/hoye-bot-discord/main/assets/badges/owner.png" }
+    ]
+}
+```
+
+These badges are only visible to LoliCord users, like Vencord or Equicord badges are
+only visible to their own users.
+
+---
+
 ## Repository
 
 Source code:

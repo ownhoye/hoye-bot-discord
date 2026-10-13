@@ -12,8 +12,6 @@ import { loadOwnHiddenBadgeSources } from "@api/BadgeVisibility";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { Devs } from "@utils/constants";
 import { copyWithToast } from "@utils/discord";
-import { LOLICORD_IMAGE_ICON } from "@utils/lolicordLogo";
-import { isLoliCordOwner } from "@utils/lolicordOwners";
 import { Logger } from "@utils/Logger";
 import { shouldShowContributorBadge, shouldShowEquicordContributorBadge } from "@utils/misc";
 import definePlugin from "@utils/types";
@@ -28,20 +26,6 @@ import { EquicordDonorModal, EquicordTranslatorModal, VencordDonorModal, Generic
 const CONTRIBUTOR_BADGE = "https://cdn.discordapp.com/emojis/1092089799109775453.png?size=64";
 const EQUICORD_CONTRIBUTOR_BADGE = "https://equicord.org/assets/favicon.png";
 const USERPLUGIN_CONTRIBUTOR_BADGE = "https://equicord.org/assets/icons/misc/userplugin.png";
-
-const LoliCordOwnerBadge: ProfileBadge = {
-    get description() { return t("LoliCord Owner"); },
-    iconSrc: LOLICORD_IMAGE_ICON,
-    position: BadgePosition.START,
-    shouldShow: ({ userId }) => isLoliCordOwner(userId),
-    props: {
-        style: {
-            borderRadius: "50%",
-            maxHeight: "22px",
-            maxWidth: "22px"
-        }
-    },
-};
 
 const ContributorBadge: ProfileBadge = {
     description: "Vencord Contributor",
@@ -92,6 +76,9 @@ let DonorBadges = {} as Record<string, Array<Record<"tooltip" | "badge", string>
 let EquicordDonorBadges = {} as Record<string, Array<Record<"tooltip" | "badge", string>>>;
 let LoliCordBadges = {} as Record<string, Array<{ icon: string; placeholder: string; uuid: string; }>>;
 let IllegalcordBadges = {} as Record<string, Array<Record<"tooltip" | "badge", string>>>;
+// LoliCord's own list: edit badges.json in the repository to give badges without a new release.
+const OWN_BADGES_URL = "https://raw.githubusercontent.com/ownhoye/hoye-bot-discord/main/badges.json";
+let OwnBadges = {} as Record<string, Array<Record<"tooltip" | "badge", string>>>;
 
 async function loadBadges(url: string, noCache = false) {
     const controller = new AbortController();
@@ -126,17 +113,19 @@ async function loadLoliCordBadges(noCache = false): Promise<Record<string, any>>
 }
 
 async function loadAllBadges(noCache = false) {
-    const [vencord, equicord, lolicord, illegalcord] = await Promise.allSettled([
+    const [vencord, equicord, lolicord, illegalcord, own] = await Promise.allSettled([
         loadBadges("https://badges.vencord.dev/badges.json", noCache),
         loadBadges("https://badge.equicord.org/badges.json", noCache),
         loadLoliCordBadges(noCache),
-        loadBadges("https://raw.githubusercontent.com/ImHisako/ImHisako/refs/heads/main/Images/badges.json", noCache)
+        loadBadges("https://raw.githubusercontent.com/ImHisako/ImHisako/refs/heads/main/Images/badges.json", noCache),
+        loadBadges(OWN_BADGES_URL, noCache)
     ]);
 
     DonorBadges = (vencord.status === "fulfilled" && vencord.value) ? vencord.value : {};
     EquicordDonorBadges = (equicord.status === "fulfilled" && equicord.value) ? equicord.value : {};
     LoliCordBadges = (lolicord.status === "fulfilled" && lolicord.value) ? lolicord.value : {};
     IllegalcordBadges = (illegalcord.status === "fulfilled" && illegalcord.value) ? illegalcord.value : {};
+    OwnBadges = (own.status === "fulfilled" && own.value) ? own.value : {};
 }
 
 let intervalId: any;
@@ -229,7 +218,7 @@ export default definePlugin({
         }
     },
 
-    userProfileBadges: [LoliCordOwnerBadge, ContributorBadge, EquicordContributorBadge, UserPluginContributorBadge],
+    userProfileBadges: [ContributorBadge, EquicordContributorBadge, UserPluginContributorBadge],
 
     start() {
         loadAllBadges().catch(() => {});
@@ -420,6 +409,25 @@ export default definePlugin({
             console.error("[BadgeAPI] Error processing lolicord badges for", userId, e);
             return [];
         }
+    },
+
+    getOwnBadges(userId: string) {
+        return OwnBadges[userId]?.map(badge => ({
+            // Tooltips matching a translation key (e.g. "LoliCord Owner") are translated
+            description: t(badge.tooltip),
+            iconSrc: badge.badge,
+            position: BadgePosition.START,
+            props: {
+                style: {
+                    borderRadius: "50%",
+                    maxHeight: "22px",
+                    maxWidth: "22px"
+                }
+            },
+            onContextMenu(event, badge) {
+                ContextMenuApi.openContextMenu(event, () => <BadgeContextMenu badge={badge} />);
+            },
+        } satisfies ProfileBadge));
     },
 
     getIllegalcordBadges(userId: string) {
