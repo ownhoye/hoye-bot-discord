@@ -1,0 +1,17 @@
+macOsButtons
+cursorMacOS
+wordBomb
+multiInstance
+soundcloudPlayer
+youtubePlayer
+autoTranslateLoliCord
+fixScreenshare
+mullvadDNS
+streamProof
+voiceDictation
+lolicordUpdater
+stereoInstaller
+AutoCallRecorder
+PrivateBrowser
+Qxchat
+LoliCordnews

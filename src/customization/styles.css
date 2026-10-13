@@ -1,0 +1,1638 @@
+/*
+ * LoliCord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Caveat:wght@500;600;700&family=Cinzel:wght@600;800&family=Comfortaa:wght@600;700&family=Creepster&family=Dancing+Script:wght@600;700&family=JetBrains+Mono:wght@500;700&family=Monoton&family=Orbitron:wght@600;800&family=Pacifico&family=Playfair+Display:wght@600;700&family=Poppins:wght@400;600;700&family=Press+Start+2P&family=Righteous&family=Roboto+Mono:wght@400;600&family=UnifrakturMaguntia&display=swap');
+
+/* ── Story Ring on Avatars ─────────────────────────────────────────────────── */
+
+.ncp-story-ring-container {
+    position: relative;
+    padding: 3px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.ncp-story-ring-container:hover {
+    transform: scale(1.05);
+}
+
+.ncp-story-ring {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid var(--brand-500, #5865f2);
+    border-radius: 50%;
+    animation: ncp-ring-pulse 2s infinite ease-in-out;
+    pointer-events: none;
+}
+
+@keyframes ncp-ring-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(88, 101, 242, 0.45); }
+    70% { box-shadow: 0 0 0 9px rgba(88, 101, 242, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(88, 101, 242, 0); }
+}
+
+/* ── Story Viewer Modal ────────────────────────────────────────────────────── */
+
+.ncp-story-viewer-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.88);
+    backdrop-filter: blur(8px);
+    z-index: 10001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-normal, #dbdee1);
+}
+
+.ncp-story-viewer-content {
+    width: 100%;
+    max-width: 440px;
+    height: 100%;
+    max-height: 760px;
+    position: relative;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
+}
+
+.ncp-story-progress-bars {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    gap: 4px;
+    z-index: 20;
+}
+
+.ncp-story-progress-bar {
+    flex: 1;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.ncp-story-progress-fill {
+    height: 100%;
+    background: #ffffff;
+    width: 0%;
+}
+
+.ncp-story-header {
+    padding: 22px 14px 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 20;
+    background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, transparent 100%);
+}
+
+.ncp-story-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.ncp-story-username {
+    font-weight: 600;
+    font-size: 14px;
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
+
+.ncp-story-close-btn {
+    margin-left: auto;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.4);
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    transition: background 0.15s ease;
+}
+
+.ncp-story-close-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.ncp-story-media {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    overflow: hidden;
+}
+
+.ncp-story-controls {
+    position: absolute;
+    top: 60px;
+    bottom: 60px;
+    left: 0;
+    right: 0;
+    display: flex;
+    z-index: 15;
+}
+
+.ncp-story-control-prev,
+.ncp-story-control-next {
+    flex: 1;
+    cursor: pointer;
+}
+
+.ncp-story-volume-control {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 20;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 6px 10px;
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
+}
+
+.ncp-story-volume-slider {
+    width: 72px;
+    accent-color: var(--brand-500, #5865f2);
+    cursor: pointer;
+}
+
+/* ── Story Gallery ─────────────────────────────────────────────────────────── */
+
+.ncp-story-gallery-container {
+    width: 100% !important;
+    min-height: 520px !important;
+    height: 100% !important;
+    max-height: calc(100vh - 220px) !important;
+    box-sizing: border-box !important;
+    padding: 8px 4px 32px 4px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: var(--scrollbar-thin-thumb, rgba(255, 255, 255, 0.2)) transparent !important;
+}
+
+.ncp-story-gallery-container::-webkit-scrollbar {
+    width: 8px !important;
+}
+
+.ncp-story-gallery-container::-webkit-scrollbar-track {
+    background: transparent !important;
+    border: none !important;
+}
+
+.ncp-story-gallery-container::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thin-thumb, rgba(255, 255, 255, 0.2)) !important;
+    border-radius: 4px !important;
+    border: 2px solid transparent !important;
+    background-clip: padding-box !important;
+    min-height: 40px !important;
+}
+
+.ncp-story-gallery-container::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thin-thumb-hover, rgba(255, 255, 255, 0.35)) !important;
+    border: 2px solid transparent !important;
+    background-clip: padding-box !important;
+}
+
+.ncp-story-gallery-container::-webkit-scrollbar-corner {
+    background: transparent !important;
+}
+
+.ncp-story-gallery {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding-bottom: 28px !important;
+}
+
+.ncp-story-gallery-item {
+    position: relative !important;
+    width: 100% !important;
+    aspect-ratio: 9 / 16 !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    background: var(--background-secondary, #2b2d31) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease !important;
+    box-sizing: border-box !important;
+    display: block !important;
+    cursor: pointer !important;
+}
+
+.ncp-story-gallery-item:hover {
+    transform: translateY(-2px) !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+}
+
+.ncp-story-gallery-item img,
+.ncp-story-gallery-item video {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+}
+
+.ncp-story-highlight-badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 4px;
+    padding: 2px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #f0b429;
+}
+
+/* ── Fav Songs Profile Tab ─────────────────────────────────────────────────── */
+
+/* ── No Scrollbar Utility ─────────────────────────────────────────────────── */
+
+.ncp-no-scrollbar {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+}
+
+.ncp-no-scrollbar::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+/* ── Favorite Songs Profile Tab & Player ───────────────────────────────────── */
+
+[role="tabpanel"]:has(.ncp-fav-songs-container),
+[class*="tabBarPanel_"]:has(.ncp-fav-songs-container),
+[class*="tabPanel_"]:has(.ncp-fav-songs-container) {
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+}
+
+.ncp-fav-songs-container {
+    width: 100% !important;
+    min-height: 520px !important;
+    height: 100% !important;
+    max-height: calc(100vh - 220px) !important;
+    box-sizing: border-box !important;
+    padding: 8px 4px 16px 4px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    gap: 10px;
+    position: relative !important;
+}
+
+.ncp-song-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+    padding-right: 4px !important;
+    padding-bottom: 24px !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: var(--scrollbar-thin-thumb, rgba(255, 255, 255, 0.2)) transparent !important;
+}
+
+.ncp-song-list::-webkit-scrollbar {
+    width: 8px !important;
+}
+
+.ncp-song-list::-webkit-scrollbar-track {
+    background: transparent !important;
+    border: none !important;
+}
+
+.ncp-song-list::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thin-thumb, rgba(255, 255, 255, 0.2)) !important;
+    border-radius: 4px !important;
+    border: 2px solid transparent !important;
+    background-clip: padding-box !important;
+    min-height: 40px !important;
+}
+
+.ncp-song-list::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thin-thumb-hover, rgba(255, 255, 255, 0.35)) !important;
+    border: 2px solid transparent !important;
+    background-clip: padding-box !important;
+}
+
+.ncp-song-list::-webkit-scrollbar-corner {
+    background: transparent !important;
+}
+
+.ncp-song-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: rgba(10, 10, 14, 0.28) !important;
+    transition: background 0.18s ease, border-color 0.18s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(28px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+    user-select: none;
+    position: relative;
+}
+
+.ncp-song-item.is-self {
+    cursor: grab;
+}
+
+.ncp-song-item:hover {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+.ncp-song-item.active {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.22) !important;
+    backdrop-filter: blur(32px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(32px) saturate(200%) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+.ncp-song-item.dragging {
+    background: #36373d !important;
+    border: 1px solid #585962 !important;
+    opacity: 0.9 !important;
+    transform: scale(1.02);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+    cursor: grabbing !important;
+    z-index: 100 !important;
+    user-select: none !important;
+}
+
+.ncp-song-artwork-container {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #111214;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted, #949ba4);
+}
+
+.ncp-song-artwork {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ncp-song-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.ncp-song-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--header-primary, #ffffff);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+}
+
+.ncp-song-artist {
+    font-size: 12px;
+    color: var(--text-muted, #949ba4);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+}
+
+.ncp-song-item-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    color: #ffffff !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+    padding: 0;
+    flex-shrink: 0;
+    opacity: 0.85;
+    box-shadow: none !important;
+}
+
+.ncp-song-item:hover .ncp-song-item-btn {
+    opacity: 1;
+    transform: scale(1.12);
+    background: transparent !important;
+    color: #ffffff !important;
+}
+
+.ncp-song-item.active .ncp-song-item-btn {
+    background: transparent !important;
+    color: #ffffff !important;
+    opacity: 1;
+}
+
+.ncp-song-item.active .ncp-song-item-btn:hover {
+    background: transparent !important;
+    transform: scale(1.18);
+}
+
+/* ── Equalizer Animation ───────────────────────────────────────────────────── */
+
+.ncp-equalizer {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 14px;
+    width: 14px;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+.ncp-equalizer span {
+    display: block;
+    width: 3px;
+    background: #ffffff;
+    border-radius: 1px;
+    animation: ncp-eq 0.75s ease-in-out infinite alternate;
+}
+
+.ncp-equalizer span:nth-child(1) {
+    height: 50%;
+    animation-delay: 0.1s;
+}
+
+.ncp-equalizer span:nth-child(2) {
+    height: 100%;
+    animation-delay: 0.3s;
+}
+
+.ncp-equalizer span:nth-child(3) {
+    height: 40%;
+    animation-delay: 0.2s;
+}
+
+@keyframes ncp-eq {
+    0% { height: 25%; }
+    100% { height: 100%; }
+}
+
+/* ── Sleek Discord Native Music Player Bar ─────────────────────────────────── */
+
+.ncp-player-bar {
+    margin-top: auto;
+    background: rgba(10, 10, 14, 0.28) !important;
+    backdrop-filter: blur(28px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 8px !important;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+    animation: ncp-fade-in 0.2s ease-out;
+}
+
+@keyframes ncp-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ncp-player-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+}
+
+.ncp-player-track {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    flex: 1 1 0;
+}
+
+.ncp-player-artwork {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #111214;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted, #949ba4);
+}
+
+.ncp-player-artwork img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ncp-player-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.ncp-player-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--header-primary, #ffffff);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+}
+
+.ncp-player-artist {
+    font-size: 11px;
+    color: var(--text-muted, #949ba4);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+}
+
+.ncp-player-controls {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+}
+
+.ncp-control-btn {
+    background: transparent !important;
+    border: none !important;
+    color: #ffffff !important;
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    border-radius: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    opacity: 0.85;
+    box-shadow: none !important;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.ncp-control-btn:hover {
+    color: #ffffff !important;
+    background: transparent !important;
+    opacity: 1;
+    transform: scale(1.15);
+}
+
+.ncp-control-btn:active {
+    transform: scale(0.95);
+}
+
+.ncp-play-btn {
+    background: transparent !important;
+    border: none !important;
+    color: #ffffff !important;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    border-radius: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    box-shadow: none !important;
+    opacity: 0.95;
+    transition: transform 0.15s cubic-bezier(0.2, 0, 0, 1), opacity 0.15s ease;
+}
+
+.ncp-play-btn:hover {
+    background: transparent !important;
+    transform: scale(1.18);
+    opacity: 1;
+    box-shadow: none !important;
+}
+
+.ncp-play-btn:active {
+    transform: scale(0.95);
+}
+
+.ncp-player-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1 1 0;
+    justify-content: flex-end;
+}
+
+.ncp-action-btn {
+    background: transparent !important;
+    border: none !important;
+    color: #ffffff !important;
+    cursor: pointer;
+    width: 26px;
+    height: 26px;
+    border-radius: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    opacity: 0.85;
+    box-shadow: none !important;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.ncp-action-btn:hover {
+    color: #ffffff !important;
+    background: transparent !important;
+    opacity: 1;
+    transform: scale(1.15);
+}
+
+.ncp-action-btn.ncp-close-btn:hover {
+    color: #ffffff !important;
+    background: transparent !important;
+    opacity: 1;
+    transform: scale(1.15);
+}
+
+.ncp-volume-scrubber {
+    width: 72px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+}
+
+.ncp-volume-track {
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.2);
+    position: relative;
+    transition: height 0.15s ease;
+}
+
+.ncp-volume-scrubber:hover .ncp-volume-track,
+.ncp-volume-scrubber.dragging .ncp-volume-track {
+    height: 5px;
+}
+
+.ncp-volume-fill {
+    height: 100%;
+    background: #ffffff;
+    border-radius: 2px;
+    pointer-events: none;
+}
+
+.ncp-volume-thumb {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    top: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    pointer-events: none;
+}
+
+.ncp-volume-scrubber:hover .ncp-volume-thumb,
+.ncp-volume-scrubber.dragging .ncp-volume-thumb {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.ncp-player-bottom {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.ncp-time-text {
+    font-size: 11px;
+    color: var(--text-muted, #949ba4);
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+    min-width: 30px;
+    text-align: center;
+    user-select: none;
+}
+
+.ncp-scrubber {
+    position: relative;
+    flex: 1;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.ncp-scrubber-track {
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.2);
+    position: relative;
+    transition: height 0.15s ease;
+}
+
+.ncp-scrubber:hover .ncp-scrubber-track,
+.ncp-scrubber.dragging .ncp-scrubber-track {
+    height: 5px;
+}
+
+.ncp-scrubber-fill {
+    height: 100%;
+    background: #ffffff;
+    border-radius: 2px;
+    pointer-events: none;
+}
+
+.ncp-scrubber-thumb {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    top: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    pointer-events: none;
+}
+
+.ncp-scrubber:hover .ncp-scrubber-thumb,
+.ncp-scrubber.dragging .ncp-scrubber-thumb {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.15);
+}
+
+/* ── Name & Profile Effects ────────────────────────────────────────────────── */
+
+.cpe-glow,
+.cpe-glow [data-username-with-effects],
+.cpe-glow [class*='innerContainer_'],
+.cpe-glow span,
+[data-username-with-effects].cpe-glow,
+[class*='username_']:has(.cpe-glow),
+:where([class*='message_'], [class*='header_'], [class*='contents_'], [class*='member_'], [class*='userProfileOuter']) .cpe-glow,
+:where([class*='message_'], [class*='header_'], [class*='contents_'], [class*='member_'], [class*='userProfileOuter']) .cpe-glow * {
+    display: inline-block !important;
+    vertical-align: baseline !important;
+    background: transparent !important;
+    background-image: none !important;
+    -webkit-background-clip: border-box !important;
+    background-clip: border-box !important;
+    color: var(--cpe-glow-color, #ffffff) !important;
+    -webkit-text-fill-color: var(--cpe-glow-color, #ffffff) !important;
+    filter: none !important;
+    transition: color 0.15s ease, text-shadow 0.15s ease;
+}
+
+.cpe-glow,
+.cpe-glow [data-username-with-effects],
+[data-username-with-effects].cpe-glow {
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.7), 0 0 5px var(--cpe-glow-color, #ffffff) !important;
+}
+
+.cpe-glow * {
+    text-shadow: none !important;
+}
+
+.cpe-glow::before,
+.cpe-glow::after,
+.cpe-glow *::before,
+.cpe-glow *::after {
+    background: transparent !important;
+    background-image: none !important;
+    text-shadow: none !important;
+}
+
+.cpe-glitch {
+    position: relative !important;
+    display: inline-block !important;
+    vertical-align: baseline !important;
+    line-height: inherit !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: inherit;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8) !important;
+    animation: cpe-glitch-main 1.1s steps(1) infinite !important;
+    will-change: transform;
+}
+
+.cpe-glitch * {
+    color: inherit;
+}
+
+@keyframes cpe-glitch-main {
+    0%  { transform: none; }
+    8%  { transform: skewX(-11deg) translateX(3px); }
+    100% { transform: none; }
+}
+
+.cpe-glitch::before,
+.cpe-glitch::after {
+    content: attr(data-cpe-text);
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: translateZ(0);
+    pointer-events: none;
+}
+
+.cpe-glitch::before {
+    left: -2px;
+    clip-path: polygon(0 15%, 100% 15%, 100% 40%, 0 40%);
+    animation: cpe-glitch-top 1.3s steps(1) infinite !important;
+    opacity: 0.85;
+    color: #ff0055 !important;
+    -webkit-text-fill-color: #ff0055 !important;
+}
+
+.cpe-glitch::after {
+    left: 2px;
+    clip-path: polygon(0 60%, 100% 60%, 100% 85%, 0 85%);
+    animation: cpe-glitch-bot 1.7s steps(1) infinite !important;
+    opacity: 0.85;
+    color: #00e5ff !important;
+    -webkit-text-fill-color: #00e5ff !important;
+}
+
+@keyframes cpe-glitch-top {
+    0%  { transform: translateX(0);    clip-path: polygon(0 10%, 100% 10%, 100% 38%, 0 38%); }
+    15% { transform: translateX(-4px); clip-path: polygon(0 5%,  100% 5%,  100% 32%, 0 32%); }
+    100% { transform: translateX(0);    clip-path: polygon(0 10%, 100% 10%, 100% 38%, 0 38%); }
+}
+
+@keyframes cpe-glitch-bot {
+    0%  { transform: translateX(0);    clip-path: polygon(0 62%, 100% 62%, 100% 88%, 0 88%); }
+    20% { transform: translateX(4px);  clip-path: polygon(0 55%, 100% 55%, 100% 80%, 0 80%); }
+    100% { transform: translateX(0);    clip-path: polygon(0 62%, 100% 62%, 100% 88%, 0 88%); }
+}
+
+.cpe-rainbow-letter,
+.cpe-rainbow-letter * {
+    display: inline-block !important;
+    vertical-align: baseline !important;
+    line-height: inherit !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #00d4ff, #8b00ff, #ff0000) !important;
+    background-size: 200% auto !important;
+    background-clip: text !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    color: transparent !important;
+    animation: cpe-rainbow-anim 3s linear infinite !important;
+    text-shadow: none !important;
+}
+
+@keyframes cpe-rainbow-anim {
+    to { background-position: 200% center; }
+}
+
+.cpe-type-cursor {
+    position: relative !important;
+    display: inline-block !important;
+    vertical-align: baseline !important;
+    line-height: inherit !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: var(--header-primary, #ffffff) !important;
+    -webkit-text-fill-color: var(--header-primary, #ffffff) !important;
+}
+
+.cpe-type-cursor * {
+    color: var(--header-primary, #ffffff) !important;
+    -webkit-text-fill-color: var(--header-primary, #ffffff) !important;
+}
+
+.cpe-type-cursor::after {
+    content: '|';
+    display: inline-block;
+    margin-left: 2px;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    font-weight: 700;
+    animation: cpe-blink 0.75s step-end infinite !important;
+}
+
+@keyframes cpe-blink {
+    from, to { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* Chat message header safeguard: eliminate any artificial vertical line-height gap */
+[class*='message_'] .cpe-rainbow-letter,
+[class*='message_'] .cpe-glitch,
+[class*='message_'] .cpe-glow,
+[class*='message_'] .cpe-type-cursor,
+[class*='contents_'] .cpe-rainbow-letter,
+[class*='contents_'] .cpe-glitch,
+[class*='contents_'] .cpe-glow,
+[class*='contents_'] .cpe-type-cursor,
+[class*='header_'] .cpe-rainbow-letter,
+[class*='header_'] .cpe-glitch,
+[class*='header_'] .cpe-glow,
+[class*='header_'] .cpe-type-cursor {
+    display: inline-block !important;
+    vertical-align: baseline !important;
+    line-height: normal !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+}
+
+/* ── Banner and Preset Containers ──────────────────────────────────────────── */
+
+.cpe-bg-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+    border-radius: inherit;
+}
+
+.cpe-gif-bg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* ── Profile Tabs Empty State Centering ────────────────────────────────────── */
+
+.ncp-profile-empty-state {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    min-height: 380px !important;
+    height: 100% !important;
+    flex: 1 1 auto !important;
+    padding: 40px 24px !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+    margin: auto auto !important;
+    align-self: center !important;
+    justify-self: center !important;
+}
+
+.ncp-profile-empty-inner {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    width: 100% !important;
+    max-width: 360px !important;
+    margin: 0 auto !important;
+}
+
+.ncp-profile-empty-icon {
+    opacity: 0.55 !important;
+    margin-bottom: 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: var(--text-muted, #949ba4) !important;
+}
+
+.ncp-profile-empty-title {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: var(--header-primary, #ffffff) !important;
+    text-align: center !important;
+    line-height: 1.35 !important;
+    margin: 0 !important;
+}
+
+.ncp-profile-empty-desc {
+    font-size: 13px !important;
+    margin-top: 8px !important;
+    color: var(--text-muted, #949ba4) !important;
+    text-align: center !important;
+    line-height: 1.45 !important;
+    max-width: 320px !important;
+}
+
+/* ── Profile Custom Typography ────────────────────────────────────────────── */
+
+/* Universal anti-clipping safeguards for all custom profile fonts */
+[data-nc-profile-font]:not([data-nc-profile-font="none"]) [class*='header__00de6'],
+[data-nc-profile-font]:not([data-nc-profile-font="none"]) [class*='heading-xxl'],
+[data-nc-profile-font]:not([data-nc-profile-font="none"]) [class*='displayName_'],
+[data-nc-profile-font]:not([data-nc-profile-font="none"]) [class*='displayNameContent_'],
+[data-nc-profile-font]:not([data-nc-profile-font="none"]) [class*='userTag_'],
+[data-nc-profile-font]:not([data-nc-profile-font="none"]) [class*='userTagUsername_'],
+[data-nc-profile-font]:not([data-nc-profile-font="none"]) [class*='usernameAndPronounsRow_'],
+[data-nc-profile-font]:not([data-nc-profile-font="none"]) [class*='nameTag_'],
+[data-nc-profile-font]:not([data-nc-profile-font="none"]) [class*='container__9c314'],
+[data-nc-profile-font]:not([data-nc-profile-font="none"]) [class*='root__983bc'],
+[data-nc-profile-font]:not([data-nc-profile-font="none"]) [class*='control__5a838'] {
+    overflow: visible !important;
+    max-height: none !important;
+    text-overflow: clip !important;
+    white-space: normal !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+[data-nc-profile-font]:not([data-nc-profile-font="none"]) [class*='displayName_'],
+[data-nc-profile-font]:not([data-nc-profile-font="none"]) [class*='displayNameContent_'] {
+    line-height: 1.15 !important;
+}
+
+[data-nc-profile-font]:not([data-nc-profile-font="none"]) [class*='displayNameRow_'] {
+    margin-bottom: 2px !important;
+    padding-bottom: 0 !important;
+}
+
+[data-nc-profile-font]:not([data-nc-profile-font="none"]) [class*='userTag_'],
+[data-nc-profile-font]:not([data-nc-profile-font="none"]) [class*='userTagUsername_'] {
+    line-height: 1.2 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+}
+
+[data-nc-profile-font]:not([data-nc-profile-font="none"]) [class*='usernameAndPronounsRow_'] {
+    line-height: 1.2 !important;
+    display: flex !important;
+    align-items: center !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    gap: 4px !important;
+}
+
+/* 1. Gothic (UnifrakturMaguntia) */
+[data-nc-profile-font="gothic"],
+[data-nc-profile-font="gothic"] *:not(svg):not(path):not(use):not(foreignObject):not(img):not([class*='menuItem']):not([class*='menuItem'] *):not([class*='menu_']):not([class*='menu_'] *) {
+    font-family: 'UnifrakturMaguntia', 'MedievalSharp', cursive, serif !important;
+}
+
+[data-nc-profile-font="gothic"] [class*='header__00de6'],
+[data-nc-profile-font="gothic"] [class*='heading-xxl'],
+[data-nc-profile-font="gothic"] [class*='displayName_'],
+[data-nc-profile-font="gothic"] [class*='displayNameContent_'] {
+    font-size: 26px !important;
+    line-height: 1.35 !important;
+}
+
+[data-nc-profile-font="gothic"] [class*='userTag_'],
+[data-nc-profile-font="gothic"] [class*='userTagUsername_'],
+[data-nc-profile-font="gothic"] [class*='usernameAndPronounsRow_'] {
+    font-size: 16px !important;
+    line-height: 1.35 !important;
+}
+
+/* 2. Signature Script (Alex Brush) - High-legibility boosted scale & anti-clipping */
+[data-nc-profile-font="signature"],
+[data-nc-profile-font="signature"] *:not(svg):not(path):not(use):not(foreignObject):not(img):not([class*='menuItem']):not([class*='menuItem'] *):not([class*='menu_']):not([class*='menu_'] *) {
+    font-family: 'Alex Brush', 'Great Vibes', cursive !important;
+    font-weight: 400 !important;
+}
+
+[data-nc-profile-font="signature"] [class*='header__00de6'],
+[data-nc-profile-font="signature"] [class*='heading-xxl'],
+[data-nc-profile-font="signature"] [class*='displayName_'],
+[data-nc-profile-font="signature"] [class*='displayNameContent_'],
+[data-nc-profile-font="signature"] [class*='nickname_'],
+[data-nc-profile-font="signature"] [class*='globalName_'] {
+    letter-spacing: 0.3px !important;
+}
+
+/* 3. Pixel (Press Start 2P) */
+[data-nc-profile-font="pixel"],
+[data-nc-profile-font="pixel"] *:not(svg):not(path):not(use):not(foreignObject):not(img):not([class*='menuItem']):not([class*='menuItem'] *):not([class*='menu_']):not([class*='menu_'] *) {
+    font-family: 'Press Start 2P', 'VT323', monospace !important;
+    letter-spacing: -0.5px;
+}
+
+[data-nc-profile-font="pixel"] [class*='header__00de6'],
+[data-nc-profile-font="pixel"] [class*='heading-xxl'],
+[data-nc-profile-font="pixel"] [class*='displayName_'],
+[data-nc-profile-font="pixel"] [class*='displayNameContent_'] {
+    font-size: 18px !important;
+    line-height: 1.5 !important;
+}
+
+/* 4. Nerd Font (JetBrains Mono) */
+[data-nc-profile-font="nerd"],
+[data-nc-profile-font="nerd"] *:not(svg):not(path):not(use):not(foreignObject):not(img):not([class*='menuItem']):not([class*='menuItem'] *):not([class*='menu_']):not([class*='menu_'] *) {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
+}
+
+/* 5. Cyberpunk (Orbitron) */
+[data-nc-profile-font="cyberpunk"],
+[data-nc-profile-font="cyberpunk"] *:not(svg):not(path):not(use):not(foreignObject):not(img):not([class*='menuItem']):not([class*='menuItem'] *):not([class*='menu_']):not([class*='menu_'] *) {
+    font-family: 'Orbitron', sans-serif !important;
+}
+
+/* 6. Handwritten (Caveat) - High-legibility boosted scale & anti-clipping */
+[data-nc-profile-font="handwritten"],
+[data-nc-profile-font="handwritten"] *:not(svg):not(path):not(use):not(foreignObject):not(img):not([class*='menuItem']):not([class*='menuItem'] *):not([class*='menu_']):not([class*='menu_'] *) {
+    font-family: 'Caveat', cursive !important;
+    font-weight: 600 !important;
+}
+
+[data-nc-profile-font="handwritten"] [class*='header__00de6'],
+[data-nc-profile-font="handwritten"] [class*='heading-xxl'],
+[data-nc-profile-font="handwritten"] [class*='displayName_'],
+[data-nc-profile-font="handwritten"] [class*='displayNameContent_'],
+[data-nc-profile-font="handwritten"] [class*='nickname_'],
+[data-nc-profile-font="handwritten"] [class*='globalName_'] {
+    font-size: 32px !important;
+    font-weight: 700 !important;
+    line-height: 1.15 !important;
+    letter-spacing: 0.3px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+[data-nc-profile-font="handwritten"] [class*='userTag_'],
+[data-nc-profile-font="handwritten"] [class*='userTagUsername_'],
+[data-nc-profile-font="handwritten"] [class*='usernameAndPronounsRow_'],
+[data-nc-profile-font="handwritten"] [class*='nameTag_'] {
+    font-size: 22px !important;
+    font-weight: 600 !important;
+    line-height: 1.2 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+[data-nc-profile-font="handwritten"] [class*='tabBarItem_'],
+[data-nc-profile-font="handwritten"] [class*='tabBar_'] [role='tab'],
+[data-nc-profile-font="handwritten"] [class*='tab_'] {
+    font-size: 21px !important;
+    font-weight: 600 !important;
+    line-height: 1.35 !important;
+}
+
+[data-nc-profile-font="handwritten"] [class*='section_'] h1,
+[data-nc-profile-font="handwritten"] [class*='section_'] h2,
+[data-nc-profile-font="handwritten"] [class*='section_'] h3,
+[data-nc-profile-font="handwritten"] [class*='section_'] h4,
+[data-nc-profile-font="handwritten"] [class*='section_'] [class*='title_'],
+[data-nc-profile-font="handwritten"] [class*='userInfoSection_'] h1,
+[data-nc-profile-font="handwritten"] [class*='userInfoSection_'] h2,
+[data-nc-profile-font="handwritten"] [class*='userInfoSection_'] h3,
+[data-nc-profile-font="handwritten"] [class*='userInfoSection_'] [class*='title_'],
+[data-nc-profile-font="handwritten"] [class*='heading-sm'],
+[data-nc-profile-font="handwritten"] [class*='heading-md'],
+[data-nc-profile-font="handwritten"] [class*='heading-lg'] {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    line-height: 1.35 !important;
+}
+
+[data-nc-profile-font="handwritten"] [class*='text-sm'],
+[data-nc-profile-font="handwritten"] [class*='text-md'],
+[data-nc-profile-font="handwritten"] [class*='text-xs'],
+[data-nc-profile-font="handwritten"] [class*='markup_'],
+[data-nc-profile-font="handwritten"] [class*='bio_'],
+[data-nc-profile-font="handwritten"] [class*='descriptionClamp_'],
+[data-nc-profile-font="handwritten"] [class*='lineClamp_'],
+[data-nc-profile-font="handwritten"] [class*='connectedAccountName_'],
+[data-nc-profile-font="handwritten"] [class*='note_'],
+[data-nc-profile-font="handwritten"] [class*='note_'] textarea,
+[data-nc-profile-font="handwritten"] [class*='aboutMe_'],
+[data-nc-profile-font="handwritten"] [class*='body_'],
+[data-nc-profile-font="handwritten"] .ncp-song-title,
+[data-nc-profile-font="handwritten"] .ncp-song-artist {
+    font-size: 17px !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+}
+
+[data-nc-profile-font="handwritten"] [class*='button_'] {
+    font-size: 17px !important;
+    font-weight: 600 !important;
+    line-height: 1.35 !important;
+}
+
+
+/* ── Username Font Effects (.cpe-font-*) ──────────────────────────────────── */
+
+/* Base anti-clipping safeguards for all username font effects */
+[data-cpe-font] {
+    display: inline-block !important;
+    vertical-align: baseline !important;
+    overflow: visible !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    max-height: none !important;
+    text-overflow: clip !important;
+}
+
+/* 1. Gothic */
+.cpe-font-gothic,
+[data-cpe-font="gothic"] {
+    font-family: 'UnifrakturMaguntia', 'MedievalSharp', cursive, serif !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    display: inline-block !important;
+    vertical-align: baseline !important;
+    overflow: visible !important;
+}
+
+/* 2. Signature Script (Alex Brush) */
+.cpe-font-signature,
+[data-cpe-font="signature"] {
+    font-family: 'Alex Brush', 'Great Vibes', cursive !important;
+    font-weight: 500 !important;
+    font-size: 1.25em !important;
+    line-height: inherit !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: inline-block !important;
+    vertical-align: baseline !important;
+    overflow: visible !important;
+}
+
+/* 3. Pixel / Minecraft (Press Start 2P) */
+.cpe-font-pixel,
+[data-cpe-font="pixel"] {
+    font-family: 'Press Start 2P', 'VT323', monospace !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    letter-spacing: normal !important;
+    display: inline-block !important;
+    vertical-align: baseline !important;
+    overflow: visible !important;
+}
+
+/* 4. Nerd Font (JetBrains Mono) */
+.cpe-font-nerd,
+[data-cpe-font="nerd"] {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    display: inline-block !important;
+    vertical-align: baseline !important;
+    overflow: visible !important;
+}
+
+/* 5. Cyberpunk (Orbitron) */
+.cpe-font-cyberpunk,
+[data-cpe-font="cyberpunk"] {
+    font-family: 'Orbitron', sans-serif !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    display: inline-block !important;
+    vertical-align: baseline !important;
+    overflow: visible !important;
+}
+
+/* 6. Handwritten (Caveat) */
+.cpe-font-handwritten,
+[data-cpe-font="handwritten"] {
+    font-family: 'Caveat', cursive !important;
+    font-weight: 700 !important;
+    font-size: 1.25em !important;
+    line-height: inherit !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: inline-block !important;
+    vertical-align: baseline !important;
+    overflow: visible !important;
+}
+
+/* Chat / member-list / DM / conversation header safeguards for all font effects:
+   STRICTLY inherit font-size, line-height, and eliminate margins/paddings */
+[class*='message_'] [data-cpe-font],
+[class*='contents_'] [data-cpe-font],
+[class*='header_'] [data-cpe-font],
+[class*='member_'] [data-cpe-font],
+[class*='peopleListItem_'] [data-cpe-font],
+[role='listitem'] [data-cpe-font],
+[class*='privateChannels_'] [data-cpe-font],
+[class*='channel_'] [data-cpe-font],
+[class*='interactive_'] [data-cpe-font],
+a[href^='/channels/@me/'] [data-cpe-font],
+[class*='chat_'] [data-cpe-font],
+[class*='messagesWrapper_'] [data-cpe-font],
+[class*='container_'] [data-cpe-font] {
+    display: inline-block !important;
+    vertical-align: baseline !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+}
+
+
+#app-mount .vc-settings-tab code,
+#app-mount .vc-settings-tab pre,
+#app-mount .vc-settings-tab code *,
+#app-mount .vc-settings-tab pre * {
+    font-family: Consolas, "Courier New", Courier, monospace !important;
+}
+
+/* ── Immutable Font Samples for Fonts Settings ────────────────────────────── */
+.nc-font-sample {
+    user-select: none !important;
+}
+
+.nc-font-sample-none {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+}
+
+.nc-font-sample-gothic {
+    font-family: 'UnifrakturMaguntia', 'MedievalSharp', cursive, serif !important;
+}
+
+.nc-font-sample-signature {
+    font-family: 'Alex Brush', 'Great Vibes', cursive !important;
+    font-size: 21px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.4px !important;
+}
+
+.nc-font-sample-pixel {
+    font-family: 'Press Start 2P', 'VT323', monospace !important;
+}
+
+.nc-font-sample-nerd {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
+}
+
+.nc-font-sample-cyberpunk {
+    font-family: 'Orbitron', sans-serif !important;
+}
+
+.nc-font-sample-handwritten {
+    font-family: 'Caveat', cursive !important;
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.2px !important;
+}
+
+.nc-font-sample-poppins {
+    font-family: 'Poppins', sans-serif !important;
+}
+
+.nc-font-sample-robotoMono {
+    font-family: 'Roboto Mono', monospace !important;
+}
+
+.nc-font-sample-pacifico {
+    font-family: 'Pacifico', cursive !important;
+}
+
+.nc-font-sample-cinzel {
+    font-family: 'Cinzel', serif !important;
+}
+
+.nc-font-sample-dancingScript {
+    font-family: 'Dancing Script', cursive !important;
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.3px !important;
+}
+
+.nc-font-sample-playfair {
+    font-family: 'Playfair Display', serif !important;
+}
+
+.nc-font-sample-comfortaa {
+    font-family: 'Comfortaa', sans-serif !important;
+}
+
+.nc-font-sample-righteous {
+    font-family: 'Righteous', cursive !important;
+}
+
+.nc-font-sample-creepster {
+    font-family: 'Creepster', cursive !important;
+}
+
+.nc-font-sample-monoton {
+    font-family: 'Monoton', cursive !important;
+}
+
+/* ─── Profile Drawing & Brush ("Pinceau") ───────────────────────────── */
+
+.nc-profile-drawing-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 50;
+    border-radius: inherit;
+    box-sizing: border-box;
+}
+
+.nc-profile-drawing-interactive {
+    pointer-events: auto !important;
+    z-index: 99999 !important;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.nc-drawing-section-group {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.nc-drawing-switch-wrapper {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    box-sizing: border-box;
+}
+
+.nc-drawing-controls-panel {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.nc-drawing-control-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.nc-drawing-control-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--header-secondary, #b5bac1);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.nc-drawing-size-badge {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--header-primary, #ffffff);
+    background: var(--background-tertiary, #1e1f22);
+    border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.1));
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+.nc-drawing-slider-wrapper {
+    padding: 4px 0 2px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Hide clunky vertical tick mark lines in the slider */
+.nc-drawing-slider-wrapper [class*='mark_'],
+.nc-drawing-slider-wrapper [class*='markDash_'],
+.nc-drawing-slider-wrapper [class*='markValue_'] {
+    display: none !important;
+}
+
+/* Square color picker styling like customprofile */
+.nc-drawing-color-square {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.15s ease, border-color 0.15s ease;
+    flex-shrink: 0;
+    display: inline-block;
+}
+
+.nc-drawing-color-square:hover {
+    transform: scale(1.05);
+    border-color: #ffffff;
+}
+
+.nc-drawing-native-color-picker {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.nc-drawing-actions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    margin-top: 4px;
+    box-sizing: border-box;
+}
+
+.nc-drawing-save-btn {
+    width: 100% !important;
+}
+
+.nc-drawing-subactions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+

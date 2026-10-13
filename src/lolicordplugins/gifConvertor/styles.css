@@ -1,0 +1,241 @@
+/*
+ * LoliCord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+/* ── Popover Container ───────────────────────────────────────────────────── */
+.nc-gifconv-popover {
+    position: fixed;
+    z-index: 9999;
+    width: 360px;
+    background-color: var(--background-floating, #232428);
+    border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+    border-radius: 12px;
+    box-shadow: var(--elevation-high, 0 8px 24px rgba(0, 0, 0, 0.45));
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    animation: nc-gifconv-popover-enter 0.18s cubic-bezier(0.16, 1, 0.3, 1) both;
+    user-select: none;
+}
+
+@keyframes nc-gifconv-popover-enter {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 8px) scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(1);
+    }
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+.nc-gifconv-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 2px;
+}
+
+.nc-gifconv-header-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nc-gifconv-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--header-primary, #ffffff);
+    letter-spacing: 0.2px;
+}
+
+.nc-gifconv-close {
+    background: none;
+    border: none;
+    color: var(--interactive-normal, #b5bac1);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.nc-gifconv-close:hover {
+    color: var(--interactive-hover, #ffffff);
+    background-color: var(--background-modifier-hover, rgba(255, 255, 255, 0.08));
+}
+
+/* ── Dropzone ────────────────────────────────────────────────────────────── */
+.nc-gifconv-dropzone {
+    border: 1.5px dashed var(--border-subtle, rgba(255, 255, 255, 0.16));
+    background-color: var(--background-secondary, #2b2d31);
+    border-radius: 10px;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.nc-gifconv-dropzone:hover,
+.nc-gifconv-dropzone.nc-gifconv-drag-over {
+    border-color: var(--brand-500, #5865f2);
+    background-color: var(--brand-500-hsl, rgba(88, 101, 242, 0.08));
+}
+
+.nc-gifconv-dropzone-icon-wrap {
+    color: var(--brand-500, #5865f2);
+    margin-bottom: 8px;
+    transition: transform 0.15s ease;
+}
+
+.nc-gifconv-dropzone:hover .nc-gifconv-dropzone-icon-wrap,
+.nc-gifconv-dropzone.nc-gifconv-drag-over .nc-gifconv-dropzone-icon-wrap {
+    transform: translateY(-2px);
+}
+
+.nc-gifconv-dropzone-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--header-primary, #ffffff);
+    margin-bottom: 4px;
+}
+
+.nc-gifconv-dropzone-sub {
+    font-size: 12px;
+    color: var(--text-muted, #949ba4);
+    margin-bottom: 12px;
+}
+
+.nc-gifconv-formats {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.nc-gifconv-format-pill {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background-color: var(--background-tertiary, #1e1f22);
+    color: var(--text-normal, #dbdee1);
+    border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.06));
+}
+
+/* ── Error Banner ────────────────────────────────────────────────────────── */
+.nc-gifconv-error-banner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background-color: rgba(237, 66, 69, 0.1);
+    border: 1px solid rgba(237, 66, 69, 0.3);
+    border-radius: 8px;
+    color: var(--text-danger, #ed4245);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* ── Loading Card ────────────────────────────────────────────────────────── */
+.nc-gifconv-loading-card {
+    background-color: var(--background-secondary, #2b2d31);
+    border-radius: 10px;
+    padding: 28px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.nc-gifconv-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top-color: var(--brand-500, #5865f2);
+    border-radius: 50%;
+    animation: nc-gifconv-spin 0.75s linear infinite;
+}
+
+@keyframes nc-gifconv-spin {
+    to { transform: rotate(360deg); }
+}
+
+.nc-gifconv-loading-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--header-primary, #ffffff);
+}
+
+.nc-gifconv-progress-bar-bg {
+    width: 80%;
+    height: 6px;
+    background-color: var(--background-tertiary, #1e1f22);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.nc-gifconv-progress-bar-fill {
+    height: 100%;
+    background-color: var(--brand-500, #5865f2);
+    border-radius: 4px;
+    transition: width 0.15s ease;
+}
+
+/* ── Preview Card ────────────────────────────────────────────────────────── */
+.nc-gifconv-preview-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nc-gifconv-preview-frame {
+    background-color: var(--background-secondary, #2b2d31);
+    border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+    border-radius: 10px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-height: 200px;
+    overflow: hidden;
+}
+
+.nc-gifconv-preview-img {
+    max-width: 100%;
+    max-height: 184px;
+    border-radius: 6px;
+    object-fit: contain;
+}
+
+.nc-gifconv-preview-filename {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted, #949ba4);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.nc-gifconv-actions {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.nc-gifconv-action-btn {
+    flex: 1;
+}

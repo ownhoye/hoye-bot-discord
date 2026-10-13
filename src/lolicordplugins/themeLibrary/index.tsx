@@ -1,0 +1,46 @@
+/*
+ * LoliCord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+import { ColorPaletteIcon } from "@components/Icons";
+import SettingsPlugin from "@plugins/_core/settings";
+import { EquicordDevs } from "@utils/constants";
+import { removeFromArray } from "@utils/misc";
+import definePlugin from "@utils/types";
+import { SettingsRouter } from "@webpack/common";
+
+import { settings } from "./utils/settings";
+
+export default definePlugin({
+    name: "ThemeLibrary",
+    enabledByDefault: false,
+    description: "A library of themes for Vencord.",
+    authors: [EquicordDevs.Fafa],
+    settings,
+    toolboxActions: {
+        "Open Theme Library": () => {
+            SettingsRouter.openUserSettings("equicord_theme_library_panel");
+        },
+    },
+
+    start() {
+        SettingsPlugin.customEntries.push({
+            key: "equicord_theme_library",
+            title: "Theme Library",
+            Component: (props: any) => {
+                const ThemeTab = require("./components/ThemeTab").default;
+                return <ThemeTab {...props} />;
+            },
+            Icon: ColorPaletteIcon
+        });
+
+        SettingsPlugin.settingsSectionMap.push(["EquicordThemeLibrary", "equicord_theme_library"]);
+    },
+
+    stop() {
+        removeFromArray(SettingsPlugin.customEntries, e => e.key === "equicord_theme_library");
+        removeFromArray(SettingsPlugin.settingsSectionMap, entry => entry[1] === "equicord_theme_library");
+    },
+});

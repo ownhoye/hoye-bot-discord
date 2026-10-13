@@ -1,0 +1,51 @@
+/*
+ * LoliCord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+/* Stealth Mode - hide LoliCord plugin UI and settings */
+
+/* Plugin buttons: header bar, channel toolbar, chat bar, user area */
+body.lolicord-stealth .vc-header-bar-btns,
+body.lolicord-stealth .vc-channel-toolbar-btns,
+body.lolicord-stealth .vc-chat-bar-btns,
+body.lolicord-stealth .vc-user-area-btns,
+
+/* Titlebar injected elements */
+body.lolicord-stealth #lolicord-titlebar-btn,
+body.lolicord-stealth #lolicord-titlebar-link-style,
+
+/* LoliCordAI nav button */
+body.lolicord-stealth .nai-nav-item,
+
+/* Modern Discord settings sidebar: complete LoliCord section wrapper and items */
+body.lolicord-stealth li:has([data-settings-sidebar-item*="equicord"]),
+body.lolicord-stealth li:has([data-settings-sidebar-item*="lolicord"]),
+body.lolicord-stealth li:has([data-settings-sidebar-item*="illegalcord"]),
+body.lolicord-stealth li:has([data-list-item-id*="settings-sidebar___equicord"]),
+body.lolicord-stealth li:has([data-list-item-id*="settings-sidebar___lolicord"]),
+body.lolicord-stealth li:has([data-list-item-id*="settings-sidebar___illegalcord"]),
+body.lolicord-stealth [data-settings-sidebar-item*="equicord"],
+body.lolicord-stealth [data-settings-sidebar-item*="lolicord"],
+body.lolicord-stealth [data-settings-sidebar-item*="illegalcord"],
+body.lolicord-stealth [data-list-item-id*="settings-sidebar___equicord"],
+body.lolicord-stealth [data-list-item-id*="settings-sidebar___lolicord"],
+body.lolicord-stealth [data-list-item-id*="settings-sidebar___illegalcord"],
+
+/* Fallback tab attributes */
+body.lolicord-stealth [data-tab-id*="equicord" i],
+body.lolicord-stealth [data-tab-id*="lolicord" i],
+body.lolicord-stealth [data-tab-id*="vencord" i],
+body.lolicord-stealth [data-tab-id="ThemeLibrary"],
+body.lolicord-stealth [data-tab-id="StereoInstaller"],
+body.lolicord-stealth [aria-controls*="equicord" i],
+body.lolicord-stealth [aria-controls*="lolicord" i],
+body.lolicord-stealth [aria-controls*="vencord" i],
+body.lolicord-stealth [id*="equicord" i],
+body.lolicord-stealth [id*="lolicord" i],
+body.lolicord-stealth [id*="vencord" i],
+body.lolicord-stealth .nc-modal-root,
+body.lolicord-stealth .nc-settings-tab {
+    display: none !important;
+}

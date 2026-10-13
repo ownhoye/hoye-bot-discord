@@ -1,0 +1,197 @@
+.vc-addon-card {
+    background-color: var(--card-background-default);
+    color: var(--interactive-icon-active);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    display: block;
+    height: 100%;
+    padding: 12px;
+    width: 100%;
+    transition: 0.1s ease-out;
+    transition-property: box-shadow, transform, background, opacity;
+    box-sizing: border-box;
+}
+
+.vc-addon-card-disabled {
+    opacity: 0.6;
+}
+
+.vc-addon-card:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--elevation-high);
+}
+
+.vc-addon-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.vc-addon-title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.vc-addon-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.vc-addon-icon svg {
+    width: 18px !important;
+    height: 18px !important;
+    max-width: 18px;
+    max-height: 18px;
+}
+
+.vc-addon-bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+.vc-addon-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.vc-addon-source {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.vc-addon-source button {
+    -webkit-appearance: none;
+    appearance: none;
+    outline: none;
+    box-shadow: none !important;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.vc-addon-source button:focus,
+.vc-addon-source button:focus-visible,
+.vc-addon-source button:active {
+    outline: none !important;
+    box-shadow: none !important;
+    background: none !important;
+}
+
+.nc-badge-btn {
+    background: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    cursor: pointer;
+    padding: 2px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    border-radius: 4px;
+    color: var(--interactive-normal);
+    transition: color 0.15s ease;
+}
+
+.nc-badge-btn:hover {
+    color: var(--interactive-hover);
+}
+
+.nc-badge-btn.nc-badge-btn-disabled {
+    cursor: not-allowed;
+}
+
+.nc-badge-btn.nc-badge-btn-disabled:hover {
+    color: var(--interactive-normal);
+}
+
+.nc-badge-btn.nc-badge-liked {
+    color: #ffffff;
+}
+
+.nc-badge-btn.nc-badge-liked:hover {
+    color: #ffffff;
+}
+
+.vc-addon-note {
+    height: 36px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    box-orient: vertical;
+    color: var(--text-default);
+}
+
+.vc-addon-name-author {
+    width: 100%;
+}
+
+.vc-addon-name {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.vc-addon-author {
+    font-size: 0.8em;
+}
+
+.vc-addon-author::before {
+    content: "by ";
+}
+
+.vc-addon-title-container {
+    width: 100%;
+    overflow: hidden;
+    height: 1.25em;
+    position: relative;
+}
+
+.vc-addon-title {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@keyframes vc-addon-title {
+    0% {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(var(--offset));
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.vc-addon-title:hover {
+    overflow: visible;
+    animation: vc-addon-title var(--duration) linear infinite;
+}
+
+.vc-addon-editable {
+    border: none;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+}
+
+.vc-addon-footer {
+    font-size: small;
+}

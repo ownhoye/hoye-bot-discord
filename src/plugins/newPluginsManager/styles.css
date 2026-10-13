@@ -1,0 +1,114 @@
+/*
+ * LoliCord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+.nc-new-plugins-root {
+    background-color: var(--background-floating, var(--background-secondary, #2b2d31)) !important;
+    background: var(--background-floating, var(--background-secondary, #2b2d31)) !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    border: 1px solid var(--background-modifier-accent, rgba(255, 255, 255, 0.08)) !important;
+    box-shadow: var(--elevation-high, 0 8px 24px rgba(0, 0, 0, 0.4)) !important;
+    transition: max-width 0.2s ease, width 0.2s ease;
+}
+
+.nc-new-plugins-root.nc-new-plugins-count-1 {
+    max-width: 440px !important;
+    width: 440px !important;
+}
+
+.nc-new-plugins-root.nc-new-plugins-count-2 {
+    max-width: 620px !important;
+    width: 620px !important;
+}
+
+.nc-new-plugins-root.nc-new-plugins-count-many {
+    max-width: 840px !important;
+    width: 90vw !important;
+}
+
+.nc-new-plugins-header {
+    padding: 20px 24px 16px 24px !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+    border-bottom: 1px solid var(--background-modifier-accent, rgba(255, 255, 255, 0.06)) !important;
+    background-color: var(--background-secondary, #2b2d31) !important;
+    background: var(--background-secondary, #2b2d31) !important;
+}
+
+.nc-new-plugins-header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+
+.nc-new-plugins-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nc-new-plugins-title {
+    color: var(--header-primary, #ffffff) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.01em;
+}
+
+.nc-new-plugins-badge {
+    background-color: var(--brand-500, #5865f2);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.nc-new-plugins-description {
+    color: var(--text-muted, #949ba4) !important;
+    font-size: 13px !important;
+    line-height: 1.4;
+}
+
+.nc-new-plugins-content {
+    padding: 20px 24px !important;
+    max-height: 520px !important;
+    overflow-y: auto !important;
+    background-color: var(--background-primary, #313338) !important;
+    background: var(--background-primary, #313338) !important;
+}
+
+.nc-new-plugins-grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+.nc-new-plugins-count-1 .nc-new-plugins-grid {
+    grid-template-columns: 1fr !important;
+}
+
+.nc-new-plugins-count-2 .nc-new-plugins-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+}
+
+.nc-new-plugins-footer {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 16px 24px !important;
+    border-top: 1px solid var(--background-modifier-accent, rgba(255, 255, 255, 0.06)) !important;
+    background-color: var(--background-secondary, #2b2d31) !important;
+    background: var(--background-secondary, #2b2d31) !important;
+}
+
+.nc-new-plugins-footer-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}

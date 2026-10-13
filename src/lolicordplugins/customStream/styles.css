@@ -1,0 +1,212 @@
+/*
+ * LoliCord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+.nc-custom-stream-modal {
+    background-color: #1e1f22 !important;
+    color: #dbdee1 !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6) !important;
+}
+
+.nc-custom-stream-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 16px 24px !important;
+    background-color: #1e1f22 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.nc-custom-stream-title {
+    color: #ffffff !important;
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.2px;
+    margin: 0;
+}
+
+.nc-custom-stream-subtitle {
+    color: #949ba4 !important;
+    font-size: 13px !important;
+    font-weight: 500;
+}
+
+.nc-custom-stream-content {
+    padding: 20px 24px !important;
+    background-color: #1e1f22 !important;
+}
+
+.nc-custom-stream-card {
+    background-color: #2b2d31 !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 8px !important;
+    padding: 14px 18px !important;
+    margin-bottom: 14px;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.nc-custom-stream-card:hover {
+    border-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+.nc-custom-stream-card-title {
+    color: #ffffff !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    margin: 0 0 2px 0;
+}
+
+.nc-custom-stream-card-desc {
+    color: #949ba4 !important;
+    font-size: 12px !important;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.nc-custom-stream-switch-track {
+    width: 44px;
+    height: 24px;
+    border-radius: 12px;
+    background-color: #4e5058;
+    transition: background-color 0.2s ease;
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.nc-custom-stream-switch-track.active {
+    background-color: #23a55a;
+}
+
+.nc-custom-stream-switch-knob {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.nc-custom-stream-switch-track.active .nc-custom-stream-switch-knob {
+    transform: translateX(20px);
+}
+
+.nc-custom-stream-profile-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    border-radius: 6px;
+    background-color: #1e1f22;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #dbdee1 !important;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+}
+
+.nc-custom-stream-profile-tab:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.14);
+    color: #ffffff !important;
+}
+
+.nc-custom-stream-profile-tab.active {
+    background-color: #5865f2 !important;
+    border-color: #5865f2 !important;
+    color: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(88, 101, 242, 0.35);
+}
+
+.nc-custom-stream-stat-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background-color: #1e1f22;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 6px;
+}
+
+.nc-custom-stream-stat-label {
+    color: #949ba4 !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.nc-custom-stream-stat-value {
+    color: #ffffff !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+}
+
+.nc-custom-stream-grid-item {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #000000;
+    border: 2px solid transparent;
+    cursor: grab;
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.nc-custom-stream-grid-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.nc-custom-stream-grid-item.active {
+    border-color: #23a55a !important;
+    box-shadow: 0 0 12px rgba(35, 165, 90, 0.4) !important;
+}
+
+.nc-custom-stream-grid-item.next {
+    border-color: #5865f2 !important;
+}
+
+.nc-custom-stream-grid-item.selected {
+    border-color: #ed4245 !important;
+}
+
+.nc-custom-stream-action-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    background-color: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.15s ease, transform 0.1s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nc-custom-stream-action-btn:hover {
+    background-color: rgba(0, 0, 0, 0.95);
+    transform: scale(1.05);
+}
+
+.nc-custom-stream-action-btn:active {
+    transform: scale(0.95);
+}
+
+.nc-custom-stream-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px !important;
+    background-color: #1e1f22 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+}

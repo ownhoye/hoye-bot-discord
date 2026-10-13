@@ -1,0 +1,388 @@
+/*
+ * LoliCord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+.vc-ghost-installer-warning {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+    margin-bottom: 16px;
+    border: 1px solid var(--status-warning);
+    border-radius: 8px;
+    background: var(--background-secondary);
+}
+
+.vc-ghost-installer-warning-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.vc-ghost-installer-root {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.vc-ghost-installer-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.vc-ghost-installer-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.vc-ghost-installer-select-grid {
+    display: grid;
+    gap: 10px;
+}
+
+.vc-ghost-installer-select-row {
+    display: grid;
+    grid-template-columns: minmax(170px, 0.4fr) minmax(220px, 1fr);
+    gap: 12px;
+    align-items: center;
+}
+
+.vc-ghost-installer-select-row span {
+    color: var(--header-primary);
+    font-weight: 600;
+}
+
+.vc-ghost-installer-select-row p {
+    color: var(--text-muted, #a3a6ac) !important;
+}
+
+.vc-ghost-installer-warning p {
+    color: var(--text-normal, #ffffff) !important;
+}
+
+.vc-ghost-installer-info {
+    display: grid;
+    gap: 8px;
+    padding: 16px;
+    border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.1));
+    border-radius: 12px;
+    background: var(--background-secondary-alt, rgba(0, 0, 0, 0.2));
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.vc-ghost-installer-install-status {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid currentColor;
+    border-radius: 8px;
+    background: var(--background-secondary);
+}
+
+.vc-ghost-installer-install-status svg {
+    flex: 0 0 auto;
+}
+
+.vc-ghost-installer-install-status h3 {
+    color: currentColor;
+}
+
+.vc-ghost-installer-install-status-installed {
+    color: var(--status-positive);
+}
+
+.vc-ghost-installer-install-status-needs-reinstall {
+    color: var(--status-warning);
+}
+
+.vc-ghost-installer-install-status-not-installed {
+    color: var(--text-muted);
+}
+
+.vc-ghost-installer-install-status p {
+    color: var(--text-normal, #ffffff) !important;
+}
+
+.vc-ghost-installer-info-line {
+    display: grid;
+    grid-template-columns: minmax(140px, 0.3fr) minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--background-primary, rgba(0, 0, 0, 0.2));
+    border-radius: 6px;
+}
+
+.vc-ghost-installer-info-line span {
+    color: var(--header-secondary, #b5bac1) !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+}
+
+.vc-ghost-installer-info-line code {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: var(--text-normal);
+}
+
+.vc-ghost-installer-status {
+    color: var(--header-secondary, #b5bac1) !important;
+}
+
+.vc-ghost-installer-root input,
+.vc-ghost-installer-root select,
+.vc-ghost-installer-root option {
+    color: var(--text-normal, #ffffff) !important;
+}
+
+.vc-ghost-installer-log-panel {
+    display: flex;
+    flex-direction: column;
+    height: 380px;
+    overflow: hidden;
+    border: 1px solid var(--background-modifier-accent);
+    border-radius: 8px;
+    background: var(--background-secondary-alt);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 3%);
+}
+
+.vc-ghost-installer-log-header {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    border-bottom: 1px solid var(--background-modifier-accent);
+}
+
+.vc-ghost-installer-log-header button {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.vc-ghost-installer-log {
+    flex: 1;
+    height: 100%;
+    background: var(--background-tertiary);
+    font-family: var(--font-code);
+    font-size: 12px;
+    overflow-y: auto;
+}
+
+.vc-ghost-installer-log::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.vc-ghost-installer-log::-webkit-scrollbar-track {
+    background-color: var(--scrollbar-thin-track, transparent);
+    border-radius: 4px;
+}
+
+.vc-ghost-installer-log::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thin-thumb, rgba(255, 255, 255, 0.2));
+    border-radius: 4px;
+}
+
+.vc-ghost-installer-log::-webkit-scrollbar-corner {
+    background-color: transparent;
+}
+
+.vc-ghost-installer-log-line {
+    display: grid;
+    grid-template-columns: minmax(125px, auto) 64px minmax(0, 1fr);
+    gap: 10px;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--background-modifier-accent);
+    color: var(--text-normal);
+    line-height: 1.4;
+}
+
+.vc-ghost-installer-log-line:last-child {
+    border-bottom: 0;
+}
+
+.vc-ghost-installer-log-line:hover {
+    background: var(--background-modifier-hover);
+}
+
+.vc-ghost-installer-log-time {
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.vc-ghost-installer-log-level {
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.vc-ghost-installer-log-message {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+.vc-ghost-installer-log-line-success .vc-ghost-installer-log-level,
+.vc-ghost-installer-log-line-success .vc-ghost-installer-log-message {
+    color: var(--status-positive, #23a55a) !important;
+}
+
+.vc-ghost-installer-log-line-warning .vc-ghost-installer-log-level,
+.vc-ghost-installer-log-line-warning .vc-ghost-installer-log-message {
+    color: var(--status-warning, #f0b232) !important;
+}
+
+.vc-ghost-installer-log-line-error .vc-ghost-installer-log-level,
+.vc-ghost-installer-log-line-error .vc-ghost-installer-log-message {
+    color: var(--status-danger, #f23f43) !important;
+}
+
+.vc-ghost-installer-log-line-info .vc-ghost-installer-log-level {
+    color: var(--text-muted, #a3a6ac) !important;
+}
+
+.vc-ghost-installer-log-line-info .vc-ghost-installer-log-message {
+    color: var(--text-normal, #ffffff) !important;
+}
+
+.vc-ghost-installer-log-header p {
+    color: var(--text-muted, #a3a6ac) !important;
+}
+
+.vc-ghost-installer-log-empty {
+    padding: 28px 12px;
+    color: var(--text-muted, #a3a6ac) !important;
+    text-align: center;
+}
+
+.vc-ghost-installer-root,
+.vc-ghost-installer-root p,
+.vc-ghost-installer-root span,
+.vc-ghost-installer-root code,
+.vc-ghost-installer-root input,
+.vc-ghost-installer-root select,
+.vc-ghost-installer-root option,
+.vc-ghost-installer-root h1,
+.vc-ghost-installer-root h2,
+.vc-ghost-installer-root h3,
+.vc-ghost-installer-root h4,
+.vc-ghost-installer-root h5,
+.vc-ghost-installer-root h6 {
+    color: #ffffff !important;
+}
+
+.vc-ghost-installer-select-row p,
+.vc-ghost-installer-log-header p,
+.vc-ghost-installer-log-empty,
+.vc-ghost-installer-status {
+    color: var(--text-muted, #a3a6ac) !important;
+}
+
+.vc-ghost-installer-info-line span {
+    color: var(--header-secondary, #b5bac1) !important;
+}
+
+.vc-ghost-installer-install-status-installed,
+.vc-ghost-installer-install-status-installed h3,
+.vc-ghost-installer-install-status-installed svg {
+    color: var(--status-positive, #23a55a) !important;
+}
+
+.vc-ghost-installer-install-status-needs-reinstall,
+.vc-ghost-installer-install-status-needs-reinstall h3,
+.vc-ghost-installer-install-status-needs-reinstall svg {
+    color: var(--status-warning, #f0b232) !important;
+}
+
+.vc-ghost-installer-install-status-not-installed,
+.vc-ghost-installer-install-status-not-installed h3,
+.vc-ghost-installer-install-status-not-installed svg {
+    color: var(--text-muted, #a3a6ac) !important;
+}
+
+.vc-ghost-installer-progress-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px 16px;
+    border-radius: 8px;
+    background: var(--background-secondary, #2b2d31);
+    border: 1px solid var(--brand-500, #5865f2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.vc-ghost-installer-progress-error {
+    border-color: var(--status-danger, #f23f43) !important;
+}
+
+.vc-ghost-installer-progress-done {
+    border-color: var(--status-positive, #23a55a) !important;
+}
+
+.vc-ghost-installer-progress-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.vc-ghost-installer-progress-title-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.vc-ghost-installer-progress-stage {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--header-primary, #ffffff) !important;
+}
+
+.vc-ghost-installer-progress-detail {
+    font-size: 12px;
+    color: var(--text-muted, #949ba4) !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.vc-ghost-installer-progress-percent {
+    font-size: 16px;
+    font-weight: 800;
+    font-family: var(--font-code, monospace);
+    color: var(--header-primary, #ffffff) !important;
+}
+
+.vc-ghost-installer-progress-bar-bg {
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;
+    background: var(--background-tertiary, #1e1f22);
+    overflow: hidden;
+    position: relative;
+}
+
+.vc-ghost-installer-progress-bar-fill {
+    height: 100%;
+    background: var(--brand-500, #5865f2);
+    border-radius: 5px;
+    transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.vc-ghost-installer-progress-error .vc-ghost-installer-progress-bar-fill {
+    background: var(--status-danger, #f23f43);
+}
+
+.vc-ghost-installer-progress-done .vc-ghost-installer-progress-bar-fill {
+    background: var(--status-positive, #23a55a);
+}
+

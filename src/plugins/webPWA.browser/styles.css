@@ -1,0 +1,13 @@
+@supports (height: env(titlebar-area-height)) {
+  @media all and (display-mode: window-controls-overlay) {
+    :root {
+      /* force title bar to be same as WCO bar height, regardless of zoom, device pixel ratio or OS */
+      --custom-app-top-bar-height: env(titlebar-area-height, 0px) !important;
+    }
+
+    /* position trailing titlebar elements alongside WCO */
+    [class*="bar_"] [class*="trailing_"] {
+      padding-right: calc(100vw - env(titlebar-area-width, 100%) - env(titlebar-area-x, 0px));
+    }
+  }
+}

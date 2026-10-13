@@ -1,0 +1,163 @@
+.lolicord-official-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background-color: var(--background-secondary-alt, #1e1f22);
+    border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+    border-radius: 8px;
+    margin: 8px 16px 16px 16px;
+    box-sizing: border-box;
+}
+
+.lolicord-official-banner-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.lolicord-official-banner-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--header-primary, #f2f3f5);
+    margin-bottom: 2px;
+}
+
+.lolicord-official-banner-sub {
+    font-size: 12px;
+    color: var(--text-muted, #949ba4);
+}
+
+.lolicord-official-banner-btn {
+    background-color: var(--button-secondary-background, #4e5058);
+    color: var(--white-500, #ffffff);
+    border: none;
+    border-radius: 4px;
+    padding: 6px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.lolicord-official-banner-btn:hover {
+    background-color: var(--button-secondary-background-hover, #6d6f78);
+}
+
+#lolicord-sidebar-mount {
+    width: 340px;
+    height: 100%;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    z-index: 2;
+}
+
+#lolicord-sidebar-mount aside {
+    height: 100%;
+    width: 340px;
+}
+
+/* ─── Urgent Message Modal (Mana System System Alert Modal) ─────────────────── */
+
+.lolicord-urgent-modal-root {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.lolicord-urgent-container {
+    background: var(--background-floating, #2b2d31);
+    border-radius: 12px;
+    overflow: hidden;
+    max-width: 440px;
+    width: 100%;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    box-sizing: border-box;
+}
+
+.lolicord-urgent-header-gradient {
+    background: linear-gradient(180deg, rgba(88, 101, 242, 0.25) 0%, rgba(88, 101, 242, 0) 100%);
+    padding: 24px 24px 16px;
+    text-align: center;
+    position: relative;
+}
+
+.lolicord-urgent-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.lolicord-urgent-close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: transparent;
+    border: none;
+    color: var(--interactive-normal, #b5bac1);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+.lolicord-urgent-close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--interactive-hover, #ffffff);
+}
+
+.lolicord-urgent-graphic-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 16px;
+}
+
+.lolicord-urgent-img {
+    width: 180px;
+    height: auto;
+    display: block;
+}
+
+.lolicord-urgent-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--header-primary, #ffffff);
+    margin: 0 0 8px 0;
+    line-height: 1.25;
+    font-family: var(--font-primary, "gg sans", sans-serif);
+}
+
+.lolicord-urgent-subtitle {
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--text-normal, #dbdee1);
+    margin: 0;
+}
+
+.lolicord-urgent-footer {
+    padding: 16px 24px 24px;
+    background: var(--background-floating, #2b2d31);
+}
+
+.lolicord-urgent-ok-btn {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--brand-500, #5865f2);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.lolicord-urgent-ok-btn:hover {
+    background: var(--brand-560, #4752c4);
+}
+

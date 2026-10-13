@@ -1,0 +1,23 @@
+/*
+ * LoliCord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+#autocall-indicator {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white-500, #ffffff);
+    user-select: none;
+    z-index: 100;
+}
+
+.autocall-time {
+    font-family: var(--font-primary);
+    color: var(--header-primary, #ffffff);
+    font-weight: 600;
+    font-size: 14px;
+}

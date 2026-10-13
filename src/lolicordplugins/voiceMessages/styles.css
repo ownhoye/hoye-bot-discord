@@ -1,0 +1,193 @@
+.vc-vmsg-modal {
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    box-shadow: none;
+    border: none;
+    min-width: auto;
+}
+
+.vc-vmsg-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75em;
+    margin-bottom: 1em;
+}
+
+.vc-vmsg-figma-ui {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    width: auto;
+    max-width: min(520px, 100%);
+    margin: 0 auto;
+    padding: 0;
+    background: transparent;
+}
+
+.vc-vmsg-figma-ui-content {
+    position: relative;
+    z-index: 1;
+    width: auto;
+    max-width: 520px;
+    padding: 28px 24px 26px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    align-items: center;
+    text-align: center;
+    background: #1f2126;
+    border-radius: 28px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.vc-vmsg-preview-container {
+    position: relative;
+    width: 100%;
+    margin-top: 18px;
+    display: flex;
+    justify-content: center;
+}
+
+.vc-vmsg-figma-ui-content .buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin-top: 0;
+    width: 100%;
+    max-width: 460px;
+}
+
+.vc-vmsg-figma-ui-content .buttons button,
+.vc-vmsg-figma-ui-content .buttons [role="button"] {
+    height: 44px !important;
+    flex: 1;
+    min-width: 150px !important;
+    max-width: 230px !important;
+    padding: 0 26px !important;
+    border-radius: 14px !important;
+    background: #4f535b !important;
+    color: #ebedef !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    letter-spacing: 0.02em !important;
+    border: 1px solid rgba(255,255,255,0.09) !important;
+    box-shadow: none !important;
+}
+
+.vc-vmsg-figma-ui-content .buttons button:hover,
+.vc-vmsg-figma-ui-content .buttons [role="button"]:hover {
+    background: #5f646d !important;
+}
+
+.vc-vmsg-figma-ui-content .buttons button[disabled],
+.vc-vmsg-figma-ui-content .buttons [role="button"][aria-disabled="true"] {
+    opacity: 0.55 !important;
+    cursor: not-allowed !important;
+}
+
+.vc-vmsg-preview {
+    color: var(--text-default);
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+    min-height: auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: min(100%, 520px);
+    margin: 0 auto;
+}
+
+.vc-vmsg-preview-playback {
+    position: relative;
+    width: 100%;
+}
+
+.vc-vmsg-preview-message {
+    width: 100%;
+    min-width: 0;
+}
+
+.vc-vmsg-download-icon {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--text-normal);
+    cursor: pointer;
+}
+
+.vc-vmsg-download-icon svg {
+    display: block;
+}
+
+.vc-vmsg-download-icon:hover {
+    background: rgba(255,255,255,0.12);
+}
+
+.vc-vmsg-download-wrap {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    z-index: 2;
+}
+
+.vc-vmsg-preview-indicator {
+    background: var(--control-secondary-background-default);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    transition: background 0.2s ease-in-out;
+}
+
+.vc-vmsg-preview-recording .vc-vmsg-preview-indicator {
+    background: var(--status-danger);
+}
+
+.vc-vmsg-preview-time {
+    opacity: 0.8;
+    margin: 0 0.5em;
+    font-size: 80%;
+
+
+    font-family: var(--font-code);
+}
+
+.vc-vmsg-preview-label {
+    opacity: 0.6;
+    letter-spacing: 0.12em;
+    font-weight: 600;
+    flex: 1;
+    text-align: center;
+}
+
+.vc-vmsg-figma-ui-content h4,
+.vc-vmsg-figma-ui-content h5,
+.vc-vmsg-figma-ui-content .formTitle {
+    width: 100%;
+    margin: 0;
+    text-align: center;
+    color: #ecedef;
+}
+
+.vc-vmsg-error {
+    color: var(--text-feedback-critical, #FF5C5C);
+}

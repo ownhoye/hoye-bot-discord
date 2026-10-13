@@ -1,0 +1,151 @@
+/*
+ * LoliCord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+.vc-ct-root {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 12px 0 24px 0;
+    max-width: 720px;
+}
+
+.vc-ct-card {
+    background-color: var(--background-secondary);
+    border: 1px solid var(--background-modifier-accent, rgba(255, 255, 255, 0.06));
+    border-radius: 8px;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.vc-ct-header-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.vc-ct-card-title {
+    color: var(--header-primary, #ffffff);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 20px;
+}
+
+.vc-ct-card-desc {
+    color: var(--text-muted, #949ba4);
+    font-size: 13px;
+    line-height: 16px;
+}
+
+.vc-ct-color-picker-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 16px;
+    background-color: var(--background-secondary-alt, #1e1f22);
+    border-radius: 8px;
+    border: 1px solid var(--background-modifier-accent, rgba(255, 255, 255, 0.08));
+}
+
+.vc-ct-color-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.vc-ct-color-title {
+    color: var(--header-primary, #ffffff);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.vc-ct-color-sub {
+    color: var(--text-muted, #949ba4);
+    font-size: 12px;
+}
+
+.vc-ct-color-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.vc-ct-color-swatch-wrapper {
+    position: relative;
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--background-modifier-accent, rgba(255, 255, 255, 0.15));
+    transition: transform 0.1s ease, border-color 0.15s ease;
+}
+
+.vc-ct-color-swatch-wrapper:hover {
+    border-color: var(--brand-500, #5865f2);
+    transform: scale(1.05);
+}
+
+.vc-ct-native-color-input {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    width: 60px;
+    height: 60px;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.vc-ct-presets-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.vc-ct-presets-label {
+    color: var(--header-secondary, #b5bac1);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.vc-ct-presets-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.vc-ct-preset-chip {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.12s ease, border-color 0.15s ease, box-shadow 0.12s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+.vc-ct-preset-chip:hover {
+    transform: scale(1.15);
+    border-color: rgba(255, 255, 255, 0.7);
+}
+
+.vc-ct-preset-chip.active {
+    border-color: var(--brand-500, #5865f2);
+    box-shadow: 0 0 0 2px var(--background-secondary), 0 0 0 4px var(--brand-500, #5865f2);
+    transform: scale(1.1);
+}
+
+.vc-ct-actions-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+}

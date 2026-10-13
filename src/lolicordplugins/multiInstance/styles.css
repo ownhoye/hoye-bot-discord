@@ -1,0 +1,302 @@
+/* ── MultiInstance styles — Discord Native Manage Accounts Layout ── */
+
+.nc-mi-modal-container {
+    background-color: var(--modal-background, #313338) !important;
+    border-radius: 12px !important;
+    padding: 24px !important;
+    box-shadow: var(--elevation-high, 0 8px 32px rgba(0,0,0,0.6)) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    max-width: 520px !important;
+    width: 100% !important;
+}
+
+.nc-mi-header {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+    padding: 0 !important;
+}
+
+.nc-mi-header-layout {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.nc-mi-title {
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    line-height: 24px !important;
+    color: var(--text-strong, var(--header-primary, #f2f3f5)) !important;
+    margin: 0 !important;
+}
+
+.nc-mi-subtitle {
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    line-height: 18px !important;
+    color: var(--text-subtle, var(--text-muted, #949ba4)) !important;
+    margin-top: 4px !important;
+}
+
+.nc-mi-close-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    color: var(--interactive-normal, #949ba4);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    padding: 0;
+}
+.nc-mi-close-btn:hover {
+    background: var(--background-modifier-hover, rgba(255, 255, 255, 0.08));
+    color: var(--interactive-hover, #ffffff);
+}
+
+/* ── Accounts List Container ── */
+
+.nc-mi-body {
+    max-height: 380px;
+    overflow-y: auto;
+    margin-bottom: 16px;
+    padding: 0 !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+}
+.nc-mi-body::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+.nc-mi-body::-webkit-scrollbar-button {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+.nc-mi-body::-webkit-scrollbar-track {
+    display: none !important;
+}
+.nc-mi-body::-webkit-scrollbar-thumb {
+    display: none !important;
+}
+
+.nc-mi-list {
+    background: var(--background-secondary, #2e3035);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.nc-mi-account-card {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.12s ease;
+    cursor: pointer;
+    user-select: none;
+}
+.nc-mi-account-card:hover {
+    background: var(--background-modifier-hover, rgba(255, 255, 255, 0.04));
+}
+
+.nc-mi-separator {
+    height: 1px;
+    background: var(--border-subtle, rgba(255, 255, 255, 0.06));
+    margin: 0 16px;
+}
+
+.nc-mi-user-details {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.nc-mi-avatar-wrapper {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--background-tertiary, #1e1f22);
+}
+
+.nc-mi-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+.nc-mi-avatar-ph {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--brand-500, #5865f2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.nc-mi-user-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.nc-mi-username {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-strong, var(--header-primary, #f2f3f5));
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.nc-mi-hint-active {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-feedback-positive, #23a55a);
+}
+
+.nc-mi-hint-open {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--brand-500, #5865f2);
+}
+
+.nc-mi-hint-sub {
+    font-size: 12px;
+    color: var(--text-muted, #949ba4);
+}
+
+.nc-mi-user-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+/* ── Switch Button ── */
+
+.nc-mi-switch-btn {
+    background: var(--button-secondary-background, #4e5058);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 6px 16px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+}
+.nc-mi-switch-btn:hover {
+    background: var(--button-secondary-background-hover, #6d6f78);
+}
+
+/* ── Options Button (Three dots ...) ── */
+
+.nc-mi-options-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    background: transparent;
+    border: none;
+    color: var(--interactive-normal, #b5bac1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    padding: 0;
+}
+.nc-mi-options-btn:hover {
+    background: var(--background-modifier-hover, rgba(255, 255, 255, 0.08));
+    color: var(--interactive-hover, #ffffff);
+}
+
+/* ── Footer Action Bar ── */
+
+.nc-mi-footer {
+    width: 100%;
+    display: flex;
+    padding: 0 !important;
+}
+
+.nc-mi-add-btn {
+    width: 100%;
+    height: 38px;
+    border-radius: 4px;
+    background: var(--button-secondary-background, #4e5058);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease;
+}
+.nc-mi-add-btn:hover {
+    background: var(--button-secondary-background-hover, #6d6f78);
+}
+
+/* ── Empty State ── */
+
+.mi-empty {
+    text-align: center;
+    color: var(--text-muted, #949ba4) !important;
+    font-size: 13px;
+    padding: 24px 16px;
+    line-height: 1.6;
+}
+
+/* ── MultiInstance HeaderBar Button Spin Animation ── */
+
+.nc-multi-instance-icon {
+    transform-origin: 50% 50%;
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+:hover > .nc-multi-instance-icon,
+[class*="iconWrapper"]:hover .nc-multi-instance-icon,
+[class*="clickable"]:hover .nc-multi-instance-icon,
+.lolicord-header-btn:hover .nc-multi-instance-icon,
+button:hover .nc-multi-instance-icon,
+.nc-multi-instance-icon:hover {
+    animation: nc-multi-instance-spin 0.42s cubic-bezier(0.25, 0.1, 0.25, 1) 1;
+}
+
+@keyframes nc-multi-instance-spin {
+    from {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+    to {
+        transform: translate3d(0, 0, 0) rotate(360deg);
+    }
+}

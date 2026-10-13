@@ -1,0 +1,142 @@
+/*
+ * LoliCord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+.nc-saved-messages-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    margin: 8px 16px;
+    background: var(--background-secondary-alt);
+    border: 1px solid var(--background-modifier-accent);
+    border-radius: 8px;
+    gap: 12px;
+}
+
+.nc-saved-messages-banner-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nc-saved-messages-banner-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--brand-500);
+    color: #ffffff;
+    flex-shrink: 0;
+}
+
+.nc-saved-messages-banner-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--header-primary);
+}
+
+.nc-saved-messages-banner-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.nc-saved-messages-banner-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+/* ── Locked Channel Overlay ── */
+.nc-saved-messages-locked-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 280px;
+    padding: 32px 16px;
+    text-align: center;
+    gap: 16px;
+}
+
+.nc-saved-messages-locked-shield {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--background-secondary-alt);
+    color: var(--brand-500);
+    border: 2px solid var(--brand-500);
+}
+
+.nc-saved-messages-locked-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--header-primary);
+}
+
+.nc-saved-messages-locked-sub {
+    font-size: 14px;
+    color: var(--text-muted);
+    max-width: 420px;
+    line-height: 1.4;
+}
+
+/* ── Attachments in Chat ── */
+.nc-saved-attachment-card {
+    margin-top: 8px;
+    max-width: 520px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--background-secondary);
+    border: 1px solid var(--background-modifier-accent);
+}
+
+.nc-saved-attachment-img {
+    max-width: 100%;
+    max-height: 360px;
+    object-fit: contain;
+    display: block;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.nc-saved-attachment-video {
+    max-width: 100%;
+    max-height: 360px;
+    display: block;
+    border-radius: 6px;
+}
+
+.nc-saved-attachment-audio {
+    width: 100%;
+    margin-top: 4px;
+}
+
+.nc-saved-attachment-file {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    gap: 12px;
+}
+
+.nc-saved-attachment-file-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--header-primary);
+    word-break: break-all;
+}
+
+.nc-saved-attachment-file-size {
+    font-size: 12px;
+    color: var(--text-muted);
+}

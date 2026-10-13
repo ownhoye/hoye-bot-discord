@@ -1,0 +1,9 @@
+.box {
+  display: none !important;
+  background: transparent !important;
+}
+
+.box .pill {
+  display: none !important;
+}
+

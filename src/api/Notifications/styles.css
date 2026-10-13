@@ -1,0 +1,186 @@
+/*
+ * LoliCord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+/* ── Container ───────────────────────────────────────────────────────────── */
+#vc-notification-container {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 999999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+#vc-notification-container > * {
+    pointer-events: auto;
+}
+
+/* ── Notification Card ───────────────────────────────────────────────────── */
+.nc-notification-card {
+    width: 340px;
+    background-color: var(--background-floating, #232428);
+    border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+    border-radius: 10px;
+    box-shadow: var(--elevation-high, 0 8px 24px rgba(0, 0, 0, 0.45));
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: nc-notif-slide-in 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+    cursor: default;
+    user-select: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.nc-notification-card:hover {
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
+}
+
+@keyframes nc-notif-slide-in {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ── Card Main Content ───────────────────────────────────────────────────── */
+.nc-notification-main {
+    padding: 14px 16px 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+.nc-notification-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nc-notification-header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nc-notification-icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.nc-notif-custom-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    object-fit: contain;
+    display: block;
+}
+
+.nc-notification-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--header-primary, #ffffff);
+    line-height: 1.2;
+}
+
+.nc-notification-close-btn {
+    background: none;
+    border: none;
+    color: var(--interactive-normal, #b5bac1);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.nc-notification-close-btn:hover {
+    color: var(--interactive-hover, #ffffff);
+    background-color: var(--background-modifier-hover, rgba(255, 255, 255, 0.08));
+}
+
+/* ── Body ────────────────────────────────────────────────────────────────── */
+.nc-notification-body {
+    margin-left: 26px;
+}
+
+.nc-notification-text {
+    font-size: 13px;
+    color: var(--text-normal, #dbdee1);
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+/* ── Image ───────────────────────────────────────────────────────────────── */
+.nc-notification-image {
+    width: 100%;
+    max-height: 160px;
+    border-radius: 6px;
+    object-fit: cover;
+    margin-top: 4px;
+}
+
+/* ── Actions ─────────────────────────────────────────────────────────────── */
+.nc-notification-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+    margin-left: 26px;
+}
+
+.nc-notification-action-btn {
+    min-height: 28px !important;
+    height: 28px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    padding: 0 12px !important;
+    border-radius: 6px !important;
+}
+
+/* ── Progress Bar ────────────────────────────────────────────────────────── */
+.nc-notification-progress-bg {
+    width: 100%;
+    height: 3px;
+    background-color: rgba(255, 255, 255, 0.06);
+}
+
+.nc-notification-progress-fill {
+    height: 100%;
+    transition: width 0.05s linear;
+}
+
+/* ── Log Modal Compatibility ─────────────────────────────────────────────── */
+.vc-notification-log-modal {
+    max-width: 962px;
+    width: clamp(var(--modal-width-large, 800px), 962px, 85vw);
+}
+
+.vc-notification-log-empty {
+    height: 218px;
+    background: url("/assets/b36de980b174d7b798c89f35c116e5c6.svg") center no-repeat;
+    margin-bottom: 40px;
+}
+
+.vc-notification-log-container {
+    padding: 1em;
+    max-height: min(750px, 75vh);
+    width: 100%;
+}
+
+.vc-notification-log-wrapper {
+    margin-bottom: 12px;
+    width: 100%;
+}

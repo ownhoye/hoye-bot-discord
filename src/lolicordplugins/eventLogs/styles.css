@@ -1,0 +1,614 @@
+/* ── EventLogs ── */
+
+.el-content {
+    padding: 10px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Toolbar filtres */
+.el-toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.el-filters {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.el-filter-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1.5px solid transparent;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.5);
+    transition: all .1s;
+    font-family: inherit;
+}
+
+.el-filter-btn:hover {
+    border-color: rgba(88, 101, 242, 0.5);
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.el-filter-btn--active {
+    background: var(--brand-500, #5865f2);
+    color: #fff;
+    border-color: transparent;
+}
+
+.el-search-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.el-guild-select-wrap {
+    min-width: 160px;
+    max-width: 240px;
+}
+
+.el-guild-select {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1.5px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    color: #fff;
+    padding: 6px 10px;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    cursor: pointer;
+    min-width: 120px;
+    max-width: 200px;
+}
+
+.el-guild-select:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.el-guild-select option {
+    background: #2f3136;
+    color: #fff;
+}
+
+.el-search-input {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1.5px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    color: #fff;
+    padding: 6px 10px;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color .15s;
+}
+
+.el-search-input:focus {
+    border-color: rgba(255, 255, 255, 0.22);
+}
+
+.el-search-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.el-clear {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    font-size: 12px;
+    font-family: inherit;
+    padding: 2px 4px;
+}
+
+.el-clear-all {
+    background: rgba(237, 66, 69, .08);
+    border: 1px solid rgba(237, 66, 69, .25);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    color: #ed4245;
+    font-family: inherit;
+    transition: background .1s;
+}
+
+.el-clear-all:hover {
+    background: rgba(237, 66, 69, .18);
+}
+
+/* Liste */
+.el-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    max-height: 360px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+}
+
+.el-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.el-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 2px;
+}
+
+.el-empty {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 13px;
+    padding: 32px 0;
+}
+
+.el-count {
+    background: var(--brand-500, #5865f2);
+    color: #fff;
+    border-radius: 20px;
+    padding: 1px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-left: 4px;
+}
+
+.el-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 5px 8px;
+    border-radius: 5px;
+    transition: background .1s;
+}
+
+.el-row:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.el-left {
+    flex-shrink: 0;
+}
+
+.el-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.el-icon-placeholder {
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+}
+
+.el-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.el-top {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+    font-size: 11px;
+}
+
+.el-badge {
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 9px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.el-author {
+    font-weight: 600;
+    color: #fff;
+    font-size: 11px;
+}
+
+.el-sep {
+    color: rgba(255, 255, 255, 0.25);
+    font-size: 10px;
+}
+
+.el-channel {
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 10px;
+}
+
+.el-guild {
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 10px;
+}
+
+.el-time {
+    margin-left: auto;
+    flex-shrink: 0;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 10px;
+}
+
+.el-msg {
+    font-size: 11px;
+    border-radius: 3px;
+    padding: 3px 6px;
+    word-break: break-word;
+    display: flex;
+    gap: 5px;
+}
+
+.el-msg--deleted {
+    background: rgba(237, 66, 69, .08);
+    border-left: 2px solid #ed4245;
+    color: rgba(255, 255, 255, .85);
+}
+
+.el-msg--before {
+    background: rgba(237, 66, 69, .06);
+    border-left: 2px solid #ed4245;
+    color: rgba(255, 255, 255, .85);
+}
+
+.el-msg--after {
+    background: rgba(59, 165, 92, .06);
+    border-left: 2px solid #3ba55c;
+    color: rgba(255, 255, 255, .85);
+}
+
+.el-msg-label {
+    font-weight: 700;
+    font-size: 10px;
+    color: rgba(255, 255, 255, .35);
+    flex-shrink: 0;
+}
+
+.el-edit-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.el-content-text {
+    font-size: 11px;
+    color: rgba(255, 255, 255, .45);
+    background: rgba(0, 0, 0, .15);
+    border-radius: 3px;
+    padding: 2px 6px;
+}
+
+/* Pagination */
+.el-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding-top: 6px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, .4);
+}
+
+.el-pagination button {
+    background: rgba(255, 255, 255, .06);
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 5px;
+    padding: 3px 9px;
+    cursor: pointer;
+    color: rgba(255, 255, 255, .7);
+    font-size: 11px;
+    font-family: inherit;
+    transition: background .1s;
+}
+
+.el-pagination button:disabled {
+    opacity: .25;
+    cursor: not-allowed;
+}
+
+.el-pagination button:not(:disabled):hover {
+    background: rgba(255, 255, 255, .1);
+}
+
+/* Attachments & Images */
+.el-attachments {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.el-attachment-item {
+    display: inline-block;
+}
+
+.el-attachment-img {
+    max-width: 200px;
+    max-height: 150px;
+    border-radius: 6px;
+    object-fit: contain;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    cursor: pointer;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+    display: block;
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.el-attachment-img:hover {
+    transform: scale(1.02);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.el-attachment-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    color: #00a8fc;
+    text-decoration: none;
+    transition: background 0.15s;
+}
+
+.el-attachment-link:hover {
+    text-decoration: underline;
+    background: rgba(0, 0, 0, 0.45);
+}
+
+.el-attachment-video {
+    max-width: 260px;
+    max-height: 160px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    display: block;
+    background: #000;
+    outline: none;
+    cursor: default;
+}
+
+.el-attachment-video:hover {
+    border-color: rgba(255, 255, 255, 0.35);
+}
+
+/* ── EventLogs Settings View ── */
+.el-settings-view {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.el-settings-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.el-settings-search-wrap {
+    flex: 1;
+    min-width: 180px;
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1.5px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    transition: border-color 0.15s;
+}
+
+.el-settings-search-wrap:focus-within {
+    border-color: rgba(255, 255, 255, 0.22);
+}
+
+.el-settings-search-input {
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    padding: 6px 8px !important;
+    flex: 1;
+}
+
+.el-settings-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.el-bulk-btn {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: var(--text-normal, #dbdee1);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 9px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.12s ease;
+}
+
+.el-bulk-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+.el-settings-header-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2px 2px;
+}
+
+.el-settings-stats {
+    font-size: 12px;
+    color: var(--text-muted, #949ba4);
+    font-weight: 500;
+}
+
+.el-servers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 380px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+    padding-right: 4px;
+}
+
+.el-servers-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.el-servers-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 3px;
+}
+
+.el-server-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    transition: all 0.15s ease;
+}
+
+.el-server-card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+.el-server-card--disabled {
+    opacity: 0.55;
+}
+
+.el-server-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    flex: 1;
+}
+
+.el-server-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: var(--background-secondary, #2b2d31);
+}
+
+.el-server-acronym {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--header-primary, #ffffff);
+    flex-shrink: 0;
+}
+
+.el-server-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.el-server-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--header-primary, #ffffff);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.el-server-status {
+    font-size: 11px;
+    color: var(--text-muted, #949ba4);
+    font-weight: 500;
+}
+
+.el-server-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.el-action-chips {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.el-action-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted, #949ba4);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s ease;
+    user-select: none;
+}
+
+.el-action-chip:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--header-primary, #ffffff);
+    border-color: rgba(255, 255, 255, 0.18);
+}
+
+.el-action-chip--active {
+    background: rgba(88, 101, 242, 0.22) !important;
+    border-color: var(--brand-500, #5865f2) !important;
+    color: #ffffff !important;
+}
+
+.el-action-chip:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.el-server-switch-wrap {
+    display: flex;
+    align-items: center;
+}

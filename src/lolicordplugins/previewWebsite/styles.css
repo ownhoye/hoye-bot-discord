@@ -1,0 +1,190 @@
+/*
+ * PreviewWebsite Plugin Styles
+ * Clean, Discord-native dark theme styling
+ */
+
+.pw-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 4px;
+    max-width: 620px;
+    width: 100%;
+}
+
+.pw-card {
+    background: var(--background-secondary, #2b2d31);
+    border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.pw-card--collapsed {
+    cursor: pointer;
+}
+
+.pw-card--collapsed:hover {
+    border-color: var(--brand-500, #5865f2);
+    background: var(--background-secondary-alt, #1e1f22);
+}
+
+.pw-card--expanded {
+    border-color: var(--border-strong, rgba(255, 255, 255, 0.15));
+}
+
+.pw-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 10px;
+    background: transparent;
+    user-select: none;
+    cursor: pointer;
+}
+
+.pw-card--expanded .pw-header {
+    background: var(--background-tertiary, #111214);
+    border-bottom: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.06));
+}
+
+.pw-header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow: hidden;
+    flex: 1;
+}
+
+.pw-favicon {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+
+.pw-hostname {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--header-primary, #f2f3f5);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pw-privacy-badge {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: rgba(88, 101, 242, 0.15);
+    color: var(--brand-360, #808bf5);
+    padding: 2px 5px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.pw-expand-hint {
+    font-size: 11px;
+    color: var(--text-muted, #949ba4);
+    margin-left: 4px;
+    white-space: nowrap;
+    opacity: 0.7;
+}
+
+.pw-controls {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    flex-shrink: 0;
+}
+
+.pw-btn {
+    background: transparent;
+    border: none;
+    color: var(--interactive-normal, #949ba4);
+    padding: 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.pw-btn:hover {
+    color: var(--interactive-hover, #dbdee1);
+    background: var(--background-modifier-hover, rgba(255, 255, 255, 0.07));
+}
+
+.pw-btn--active {
+    color: var(--brand-500, #5865f2);
+    background: rgba(88, 101, 242, 0.15);
+}
+
+.pw-scale-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 6px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    color: var(--text-normal, #dbdee1);
+}
+
+.pw-scale-badge:hover {
+    background: rgba(88, 101, 242, 0.2);
+    color: var(--brand-360, #808bf5);
+}
+
+.pw-viewport-wrapper {
+    position: relative;
+    width: 100%;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+.pw-scaler {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: auto;
+}
+
+.pw-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+    background: #ffffff;
+}
+
+.pw-loading-overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--background-secondary, #2b2d31);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--text-muted, #949ba4);
+    font-size: 13px;
+    z-index: 2;
+}
+
+.pw-spinner {
+    width: 22px;
+    height: 22px;
+    border: 2.5px solid rgba(255, 255, 255, 0.1);
+    border-top-color: var(--brand-500, #5865f2);
+    border-radius: 50%;
+    animation: pw-spin 0.8s linear infinite;
+}
+
+@keyframes pw-spin {
+    to { transform: rotate(360deg); }
+}
