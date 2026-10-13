@@ -12,6 +12,8 @@ import { loadOwnHiddenBadgeSources } from "@api/BadgeVisibility";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { Devs } from "@utils/constants";
 import { copyWithToast } from "@utils/discord";
+import { LOLICORD_IMAGE_ICON } from "@utils/lolicordLogo";
+import { isLoliCordOwner } from "@utils/lolicordOwners";
 import { Logger } from "@utils/Logger";
 import { shouldShowContributorBadge, shouldShowEquicordContributorBadge } from "@utils/misc";
 import definePlugin from "@utils/types";
@@ -19,11 +21,27 @@ import { ContextMenuApi, FluxDispatcher, Menu, Toasts, UserStore } from "@webpac
 
 import Plugins, { PluginMeta } from "~plugins";
 
+import { t } from "../../../lolicordplugins/autoTranslateLoliCord";
+
 import { EquicordDonorModal, EquicordTranslatorModal, VencordDonorModal, GenericBadgeModal } from "./modals";
 
 const CONTRIBUTOR_BADGE = "https://cdn.discordapp.com/emojis/1092089799109775453.png?size=64";
 const EQUICORD_CONTRIBUTOR_BADGE = "https://equicord.org/assets/favicon.png";
 const USERPLUGIN_CONTRIBUTOR_BADGE = "https://equicord.org/assets/icons/misc/userplugin.png";
+
+const LoliCordOwnerBadge: ProfileBadge = {
+    get description() { return t("LoliCord Owner"); },
+    iconSrc: LOLICORD_IMAGE_ICON,
+    position: BadgePosition.START,
+    shouldShow: ({ userId }) => isLoliCordOwner(userId),
+    props: {
+        style: {
+            borderRadius: "50%",
+            maxHeight: "22px",
+            maxWidth: "22px"
+        }
+    },
+};
 
 const ContributorBadge: ProfileBadge = {
     description: "Vencord Contributor",
@@ -117,7 +135,7 @@ async function loadAllBadges(noCache = false) {
 
     DonorBadges = (vencord.status === "fulfilled" && vencord.value) ? vencord.value : {};
     EquicordDonorBadges = (equicord.status === "fulfilled" && equicord.value) ? equicord.value : {};
-    LoliCordBadges = (nightcord.status === "fulfilled" && lolicord.value) ? lolicord.value : {};
+    LoliCordBadges = (lolicord.status === "fulfilled" && lolicord.value) ? lolicord.value : {};
     IllegalcordBadges = (illegalcord.status === "fulfilled" && illegalcord.value) ? illegalcord.value : {};
 }
 
@@ -211,7 +229,7 @@ export default definePlugin({
         }
     },
 
-    userProfileBadges: [ContributorBadge, EquicordContributorBadge, UserPluginContributorBadge],
+    userProfileBadges: [LoliCordOwnerBadge, ContributorBadge, EquicordContributorBadge, UserPluginContributorBadge],
 
     start() {
         loadAllBadges().catch(() => {});

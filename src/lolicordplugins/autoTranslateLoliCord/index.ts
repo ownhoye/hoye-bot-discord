@@ -11,6 +11,7 @@ export type SupportedLang = "en" | "fr" | "ar" | "es" | "ru" | "zh";
 export type TranslationMap = Record<string, Record<SupportedLang, string>>;
 
 export const translations: TranslationMap = {
+    "LoliCord Owner": {"en":"LoliCord Owner","fr":"Propriétaire de LoliCord","ar":"مالك LoliCord","es":"Propietario de LoliCord","ru":"Владелец LoliCord","zh":"LoliCord 所有者"},
     "Pinceau": {"en":"Brush","fr":"Pinceau","ar":"فرشاة الرسم","es":"Pincel","ru":"Кисть","zh":"画笔"},
     "Profile Drawing": {"en":"Profile Drawing","fr":"Dessin de profil","ar":"رسم الملف الشخصي","es":"Dibujo de perfil","ru":"Рисунок профиля","zh":"个人资料涂鸦"},
     "Draw freely on your profile preview. Your drawing will be visible to everyone on your profile!": {"en":"Draw freely on your profile preview. Your drawing will be visible to everyone on your profile!","fr":"Dessinez librement sur l'aperçu de votre profil. Votre dessin sera visible par tout le monde sur votre profil !","ar":"ارسم بحرية على معاينة ملفك الشخصي. سيكون رسمك مرئياً للجميع على ملفك!","es":"Dibuja libremente en la vista previa de tu perfil. ¡Tu dibujo será visible para todos en tu perfil!","ru":"Рисуйте свободно на превью вашего профиля. Ваш рисунок будет виден всем в вашем профиле!","zh":"在个人资料预览上自由涂鸦。所有人都能在您的个人资料上看到！"},

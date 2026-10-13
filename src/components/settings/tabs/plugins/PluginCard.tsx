@@ -12,6 +12,7 @@ import { getStoredToken } from "@api/OAuth2";
 import { CogWheel, InfoIcon } from "@components/Icons";
 import { AddonCard } from "@components/settings/AddonCard";
 import { classNameFactory } from "@utils/css";
+import { LOLICORD_IMAGE_ICON } from "@utils/lolicordLogo";
 import { Logger } from "@utils/Logger";
 import { ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalRoot, ModalSize, openModal } from "@utils/modal";
 import { OptionType, Plugin } from "@utils/types";
@@ -398,7 +399,7 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
                 <ModalContent style={{ padding: "16px", display: "flex", flexDirection: "column", gap: "16px", alignItems: "center" } as any}>
                     {isLoliCord ? (
                         <a href="https://github.com/ownhoye/hoye-bot-discord" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: "12px", textDecoration: "none", color: "var(--text-normal)", fontSize: "20px", fontWeight: 600 }}>
-                            <img src="https://source.nightcord.st/assets/img/logo.svg" alt="LoliCord" style={{ width: 64, height: 64, borderRadius: "50%" }} />
+                            <img src={LOLICORD_IMAGE_ICON} alt="LoliCord" style={{ width: 64, height: 64, borderRadius: "50%" }} />
                             LoliCord
                         </a>
                     ) : (
