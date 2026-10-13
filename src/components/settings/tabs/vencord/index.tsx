@@ -1,6 +1,6 @@
 /*
- * Vencord, a Discord client mod
- * Copyright (c) 2024 Vendicated and contributors
+ * LoliCord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -18,7 +18,7 @@ import { Divider } from "@components/Divider";
 import { Flex } from "@components/Flex";
 import { FormSwitch } from "@components/FormSwitch";
 import { Heading } from "@components/Heading";
-import { HeartIcon, GithubIcon, LogIcon, OwnerCrownIcon, PaintbrushIcon, DiscordIcon, RestartIcon, WebsiteIcon } from "@components/Icons";
+import { GithubIcon, LogIcon, OwnerCrownIcon, PaintbrushIcon, DiscordIcon, RestartIcon, WebsiteIcon } from "@components/Icons";
 
 import { Notice } from "@components/Notice";
 import { Paragraph } from "@components/Paragraph";
@@ -28,14 +28,12 @@ import { IS_MAC, IS_WINDOWS } from "@utils/constants";
 import { classNameFactory } from "@utils/css";
 import { Margins } from "@utils/margins";
 import { identity } from "@utils/misc";
-import { openModal } from "@utils/modal";
 import { relaunch } from "@utils/native";
 import { Avatar, OAuth2AuthorizeModal, React, Select, UserStore, showToast, Toasts, TextInput } from "@webpack/common";
 import { Settings } from "Vencord";
 import { getGroqKey, setGroqKey } from "@lolicordplugins/lolicordAI/groqManager";
 
 
-import { ContributeModal } from "../../../../lolicord/renderer/components/ContributeModal";
 import { copyToClipboard } from "@utils/clipboard";
 import { openNotificationSettingsModal } from "./NotificationSettings";
 import { updateNativeButtonsVisibility } from "../../../../plugins/_core/hideNativeButtons";
@@ -44,7 +42,7 @@ const cl = classNameFactory("vc-vencord-tab-");
 
 const DEV_TEAM_IDS = [
     { 
-        id: "1539701501679894678", 
+        id: "1403456424461467708",
         role: "Creator"
     }
 ];
@@ -128,11 +126,6 @@ function DevTeamSection() {
                         action={relaunch}
                     />
                 )}
-                <QuickAction
-                    Icon={HeartIcon}
-                    text={t("Contribute")}
-                    action={() => openModal(props => <ContributeModal {...props} />)}
-                />
                 <QuickAction
                     Icon={OwnerCrownIcon}
                     text={t("DEV Team")}
