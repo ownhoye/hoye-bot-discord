@@ -205,19 +205,35 @@ function stopDomObserver() {
     }
 }
 
+const LEARN_MORE_LABELS = ["learn more", "en savoir plus"];
+const isBannerButtonLabel = (text: string | null | undefined) => {
+    const txt = text?.trim().toLowerCase() ?? "";
+    return LEARN_MORE_LABELS.includes(txt) || txt === t("Write an announcement").toLowerCase();
+};
+
+// Discord renders its own system-DM footer for this channel (not the plugin banner),
+// so the owner tools are attached to that footer's "Learn more" button.
+function relabelBannerButtonForOwner() {
+    if (SelectedChannelStore.getChannelId() !== LOLICORD_CHANNEL_ID || !isCurrentUserOwner()) return;
+    for (const btn of Array.from(document.querySelectorAll("main button, [class*='chatContent'] button"))) {
+        const label = btn.querySelector("span, div") ?? btn;
+        if (LEARN_MORE_LABELS.includes(label.textContent?.trim().toLowerCase() ?? "")) {
+            label.textContent = t("Write an announcement");
+        }
+    }
+}
+
 function handleGlobalClick(e: MouseEvent) {
     if (SelectedChannelStore.getChannelId() !== LOLICORD_CHANNEL_ID) return;
     const target = e.target as HTMLElement;
     if (!target) return;
 
     const btn = target.closest("button") || target.closest("a");
-    if (btn) {
-        const txt = btn.textContent?.trim().toLowerCase();
-        if (txt === "learn more" || txt === "en savoir plus") {
-            e.preventDefault();
-            e.stopPropagation();
-            window.open("https://github.com/ownhoye/hoye-bot-discord", "_blank");
-        }
+    if (btn && isBannerButtonLabel(btn.textContent)) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (isCurrentUserOwner()) openOwnerComposer();
+        else window.open("https://github.com/ownhoye/hoye-bot-discord", "_blank");
     }
 }
 
@@ -668,6 +684,11 @@ const messageContextMenuPatch: NavContextMenuPatchCallback = (children, { messag
     if (message?.channel_id !== LOLICORD_CHANNEL_ID || !isCurrentUserOwner()) return;
     children.push(
         <Menu.MenuItem
+            id="lolicord-write-announcement"
+            label={t("Write an announcement")}
+            action={openOwnerComposer}
+        />,
+        <Menu.MenuItem
             id="lolicord-delete-announcement"
             label={t("Delete announcement")}
             color="danger"
@@ -815,6 +836,8 @@ function handleChannelSelect(e: any) {
             try { (findStore("ReadStateStore") as any)?.emitChange(); } catch {}
         }, 0);
         checkAndInjectPosts(true);
+        // The footer mounts after the channel switch: retry until it is in the DOM
+        for (const delay of [300, 1000, 2500]) setTimeout(relabelBannerButtonForOwner, delay);
     }
 }
 
@@ -1601,6 +1624,7 @@ export default definePlugin({
         setTimeout(() => {
             isAppLoaded = true;
             checkAndInjectPosts(true);
+            relabelBannerButtonForOwner();
             pollInterval = setInterval(() => checkAndInjectPosts(false), 120000);
         }, 1000);
         }, 500); // end deferred startup — all store patches run after first paint + CONNECTION_OPEN
