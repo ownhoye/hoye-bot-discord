@@ -5,7 +5,6 @@
  */
 
 import "./fixDiscordBadgePadding.css";
-import {domain} from "../../../../DOMAIN.json"
 
 import { _getBadges, BadgePosition, BadgeUserArgs, ProfileBadge } from "@api/Badges";
 import { loadOwnHiddenBadgeSources } from "@api/BadgeVisibility";
@@ -74,7 +73,7 @@ const UserPluginContributorBadge: ProfileBadge = {
 
 let DonorBadges = {} as Record<string, Array<Record<"tooltip" | "badge", string>>>;
 let EquicordDonorBadges = {} as Record<string, Array<Record<"tooltip" | "badge", string>>>;
-let LoliCordBadges = {} as Record<string, Array<{ icon: string; placeholder: string; uuid: string; }>>;
+const LoliCordBadges = {} as Record<string, Array<{ icon: string; placeholder: string; uuid: string; }>>;
 let IllegalcordBadges = {} as Record<string, Array<Record<"tooltip" | "badge", string>>>;
 // LoliCord's own list: edit badges.json in the repository to give badges without a new release.
 const OWN_BADGES_URL = "https://raw.githubusercontent.com/ownhoye/hoye-bot-discord/main/badges.json";
@@ -97,33 +96,16 @@ async function loadBadges(url: string, noCache = false) {
     }
 }
 
-async function loadLoliCordBadges(noCache = false): Promise<Record<string, any>> {
-    // Use main-process net.fetch to bypass CORS restrictions on the LoliCord API.
-    // Only available in desktop (Electron) context.
-    if (IS_WEB || typeof VencordNative?.lolicord?.netFetch !== "function") {
-        return loadBadges(`https://api.${domain}/badges`, noCache);
-    }
-    try {
-        const res = await VencordNative.lolicord.netFetch(`https://api.${domain}/badges`, { noCache });
-        if (!res?.ok || !res.data || typeof res.data !== "object") return {};
-        return res.data as Record<string, any>;
-    } catch {
-        return {};
-    }
-}
-
 async function loadAllBadges(noCache = false) {
-    const [vencord, equicord, lolicord, illegalcord, own] = await Promise.allSettled([
+    const [vencord, equicord, illegalcord, own] = await Promise.allSettled([
         loadBadges("https://badges.vencord.dev/badges.json", noCache),
         loadBadges("https://badge.equicord.org/badges.json", noCache),
-        loadLoliCordBadges(noCache),
         loadBadges("https://raw.githubusercontent.com/ImHisako/ImHisako/refs/heads/main/Images/badges.json", noCache),
         loadBadges(OWN_BADGES_URL, noCache)
     ]);
 
     DonorBadges = (vencord.status === "fulfilled" && vencord.value) ? vencord.value : {};
     EquicordDonorBadges = (equicord.status === "fulfilled" && equicord.value) ? equicord.value : {};
-    LoliCordBadges = (lolicord.status === "fulfilled" && lolicord.value) ? lolicord.value : {};
     IllegalcordBadges = (illegalcord.status === "fulfilled" && illegalcord.value) ? illegalcord.value : {};
     OwnBadges = (own.status === "fulfilled" && own.value) ? own.value : {};
 }

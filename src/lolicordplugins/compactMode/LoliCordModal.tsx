@@ -8,7 +8,7 @@ import ErrorBoundary from "@components/ErrorBoundary";
 import { ModalContent, ModalProps, ModalRoot, ModalSize, openModal } from "@utils/modal";
 import { React, useState } from "@webpack/common";
 
-import { ThemesTab, ChangelogTab, PluginsTab, BackupAndRestoreTab, UpdaterTab, VencordTab, SyncTab, LanguageTab, StatusTab } from "@components/settings/tabs";
+import { ThemesTab, ChangelogTab, PluginsTab, BackupAndRestoreTab, UpdaterTab, VencordTab, SyncTab, LanguageTab } from "@components/settings/tabs";
 import IconsTab from "@lolicordplugins/iconViewer/components/IconsTab";
 import { CreateThemeTab } from "@components/settings/tabs/createTheme/CreateThemeTab";
 
@@ -39,12 +39,6 @@ const TABS: TabDef[] = [
         label: "Themes",
         icon: "M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z",
         description: "Apply and manage CSS themes",
-    },
-    {
-        id: "status",
-        label: "Status",
-        icon: "M2 3a1 1 0 0 1 1-1c6.92 0 12.97 3.7 16.3 9.22.22.37-.15.86-.6.9-.2.02-.4.06-.6.12a.58.58 0 0 1-.67-.22C14.43 7.2 9.1 4 3 4a1 1 0 0 1-1-1ZM15.48 15.15a.5.5 0 0 0 .02-.47A14 14 0 0 0 3 7a1 1 0 0 0 0 2 12 12 0 0 1 10.95 7.09c.18.39.74.44.96.07l.57-1.01ZM2 13a1 1 0 0 1 1-1 9 9 0 0 1 9 9 1 1 0 1 1-2 0 7 7 0 0 0-7-7 1 1 0 0 1-1-1ZM2 17.83c0-.46.37-.83.83-.83C5.13 17 7 18.87 7 21.17c0 .46-.37.83-.83.83H3a1 1 0 0 1-1-1v-3.17ZM18.09 14.63c.4-.7 1.43-.7 1.82 0l3.96 6.9c.38.66-.12 1.47-.91 1.47h-7.92c-.79 0-1.3-.81-.91-1.48l3.96-6.9Zm.46 1.87h.9c.3 0 .52.26.5.55l-.22 2.02c-.01.16-.17.26-.33.23a1.93 1.93 0 0 0-.8 0c-.16.03-.32-.07-.33-.23l-.21-2.02a.5.5 0 0 1 .5-.55ZM19 22a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z",
-        description: "Services health & infrastructure uptime",
     },
     {
         id: "createTheme",
@@ -112,7 +106,6 @@ function LoliCordModalInner({ onClose }: { onClose: () => void; }) {
         case "iconFinder": TabContent = <IconsTab />; break;
         case "sync": TabContent = <SyncTab />; break;
         case "language": TabContent = <LanguageTab />; break;
-        case "status": TabContent = <StatusTab />; break;
     }
 
     return (

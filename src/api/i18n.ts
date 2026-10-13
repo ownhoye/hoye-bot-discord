@@ -60,6 +60,7 @@ const translations: Record<string, Partial<Record<Language, string>>> = {
     "Edit QuickCSS": { fr: "Modifier le QuickCSS", es: "Editar QuickCSS", ru: "Редактировать QuickCSS", zh: "编辑 QuickCSS", ar: "تحرير QuickCSS" },
     "Relaunch Discord": { fr: "Relancer Discord", es: "Reiniciar Discord", ru: "Перезапустить Discord", zh: "重启 Discord", ar: "إعادة تشغيل Discord" },
     "Contribute": { fr: "Contribuer", es: "Contribuir", ru: "Внести вклад", zh: "贡献", ar: "المساهمة" },
+    "Looking for themes? Search on": { fr: "Vous cherchez des thèmes ? Cherchez sur", es: "¿Buscas temas? Busca en", ru: "Ищете темы? Поищите на", zh: "在找主题？可以在以下网站搜索", ar: "تبحث عن سمات؟ ابحث على" },
     "DEV Team": { fr: "Équipe DEV", es: "Equipo DEV", ru: "Команда разработчиков", zh: "开发团队", ar: "فريق التطوير" },
     "Discord Server": { fr: "Serveur Discord", es: "Servidor de Discord", ru: "Сервер Discord", zh: "Discord 服务器", ar: "سيرفر Discord" },
     "Join Discord Server": { fr: "Rejoindre le serveur Discord", es: "Unirse al servidor de Discord", ru: "Присоединиться к серверу Discord", zh: "加入 Discord 服务器", ar: "الانضمام إلى سيرفر Discord" },

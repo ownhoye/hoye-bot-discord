@@ -8,8 +8,6 @@ $ProgressPreference    = "SilentlyContinue"
 # Windows PowerShell 5.1 defaults to TLS 1.0, which GitHub rejects
 [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 
-$GiteaUrl     = "https://source.nightcord.st"
-$GiteaRepo    = "lolicord/lolicord"
 $InstallDir   = Join-Path $env:LOCALAPPDATA "LoliCord"
 $DistDir      = Join-Path $InstallDir "dist"
 $InstallerDir = Join-Path $InstallDir "installer"

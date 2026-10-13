@@ -11,10 +11,14 @@ import { definePluginSettings } from "@api/Settings";
 import definePlugin, { StartAt, OptionType } from "@utils/types";
 import { closeModal, ModalProps, ModalRoot, ModalSize, openModal } from "@utils/modal";
 import { findAll, filters, findByCodeLazy, findByProps, findByPropsLazy, findComponentByCodeLazy, findStore, waitFor } from "@webpack";
-import { ChannelActionCreators, ChannelStore, DisplayProfileUtils, FluxDispatcher, i18n, IconUtils, NavigationRouter, React, SelectedChannelStore, SnowflakeUtils, UsernameUtils, UserProfileActions, UserStore } from "@webpack/common";
+import { NavContextMenuPatchCallback } from "@api/ContextMenu";
+import { isLoliCordOwner } from "@utils/lolicordOwners";
+import { ChannelActionCreators, ChannelStore, DisplayProfileUtils, FluxDispatcher, i18n, IconUtils, NavigationRouter, React, SelectedChannelStore, Menu, showToast, SnowflakeUtils, Toasts, UsernameUtils, UserProfileActions, UserStore } from "@webpack/common";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { BaseText } from "@components/BaseText";
 import { t } from "../autoTranslateLoliCord";
+import { Announcement, deleteAnnouncement, fetchAnnouncements, getGithubToken } from "./announcements";
+import { openAnnouncementModal } from "./AnnouncementModal";
 import { LOLICORD_AVATAR_BASE64 } from "./avatarData";
 
 export const LOLICORD_USER_ID = "999999999999999999";
@@ -40,11 +44,6 @@ export const settings = definePluginSettings({
         hidden: true,
     }
 });
-
-const API_URLS = [
-    "https://social.nightcord.st/api/v1/timelines/public?local=true&limit=20",
-    "https://social.nightcord.st/api/v1/timelines/public?limit=20"
-];
 
 function getItemSafe(key: string): string | null {
     try {
@@ -217,7 +216,7 @@ function handleGlobalClick(e: MouseEvent) {
         if (txt === "learn more" || txt === "en savoir plus") {
             e.preventDefault();
             e.stopPropagation();
-            window.open("https://nightcord.st", "_blank");
+            window.open("https://github.com/ownhoye/hoye-bot-discord", "_blank");
         }
     }
 }
@@ -433,65 +432,13 @@ let unpatchDisplayProfile: (() => void) | null = null;
 let unpatchSectionStores: (() => void)[] = [];
 let unpatchAvatarFns: (() => void)[] = [];
 
-function htmlToMarkdown(html: string): string {
-    if (!html) return "";
-    let text = html
-        .replace(/<br\s*\/?>/gi, "\n")
-        .replace(/<\/p><p>/gi, "\n\n")
-        .replace(/<p>/gi, "")
-        .replace(/<\/p>/gi, "\n\n")
-        .replace(/<a [^>]*href="([^"]+)"[^>]*>(.*?)<\/a>/gi, "[$2]($1)")
-        .replace(/<strong>(.*?)<\/strong>/gi, "**$1**")
-        .replace(/<b>(.*?)<\/b>/gi, "**$1**")
-        .replace(/<em>(.*?)<\/em>/gi, "*$1*")
-        .replace(/<i>(.*?)<\/i>/gi, "*$1*")
-        .replace(/<code[^>]*>(.*?)<\/code>/gi, "`$1`")
-        .replace(/<[^>]+>/g, "");
-
-    text = text
-        .replace(/&amp;/g, "&")
-        .replace(/&lt;/g, "<")
-        .replace(/&gt;/g, ">")
-        .replace(/&quot;/g, '"')
-        .replace(/&#39;/g, "'");
-
-    return text.trim();
-}
-
 const knownPostIds = new Set<string>();
-let streamingSocket: WebSocket | null = null;
-let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
-
-const STREAMING_URLS = [
-    "wss://social.nightcord.st/api/v1/streaming?stream=public:local",
-    "wss://social.nightcord.st/api/v1/streaming?stream=public",
-    "wss://social.nightcord.st/api/v1/streaming/public/local",
-    "wss://social.nightcord.st/api/v1/streaming/public"
-];
-
-let streamUrlIdx = 0;
-
 function convertPostToMessage(post: any): any {
     const postId = String(post.id);
 
     const embeds: any[] = [];
-    if (Array.isArray(post.media_attachments)) {
-        for (const att of post.media_attachments) {
-            if (att.type === "image" || att.type === "gifv") {
-                const w = att.meta?.original?.width || att.meta?.small?.width;
-                const h = att.meta?.original?.height || att.meta?.small?.height;
-                const imageObj: any = { url: att.url, proxy_url: att.url };
-                if (w && h) {
-                    imageObj.width = w;
-                    imageObj.height = h;
-                }
-                embeds.push({
-                    type: "image",
-                    url: att.url,
-                    image: imageObj
-                });
-            }
-        }
+    if (typeof post.image === "string" && /^https:\/\//.test(post.image)) {
+        embeds.push({ type: "image", url: post.image, image: { url: post.image, proxy_url: post.image } });
     }
 
     const rawAuthor = {
@@ -510,7 +457,7 @@ function convertPostToMessage(post: any): any {
         id: postId,
         channel_id: LOLICORD_CHANNEL_ID,
         author: rawAuthor,
-        content: htmlToMarkdown(post.content),
+        content: post.content,
         timestamp: new Date(post.created_at).toISOString(),
         edited_timestamp: null,
         tts: false,
@@ -582,91 +529,6 @@ function injectSinglePost(post: any) {
         try { (findStore("PrivateChannelSortStore") as any)?.emitChange(); } catch {}
         try { (findStore("ChannelStore") as any)?.emitChange(); } catch {}
     }
-}
-
-let wsRetryCount = 0;
-
-function connectMastodonStreaming() {
-    if (streamingSocket || settings.store.isDmClosed) return;
-
-    try {
-        const url = STREAMING_URLS[streamUrlIdx % STREAMING_URLS.length];
-        const ws = new WebSocket(url);
-        streamingSocket = ws;
-
-        ws.onopen = () => {
-            wsRetryCount = 0;
-            try {
-                ws.send(JSON.stringify({ type: "subscribe", stream: "public:local" }));
-                ws.send(JSON.stringify({ type: "subscribe", stream: "public" }));
-            } catch {}
-        };
-
-        ws.onmessage = (event) => {
-            try {
-                const data = JSON.parse(event.data);
-                if (data.event === "update" && data.payload) {
-                    const post = typeof data.payload === "string" ? JSON.parse(data.payload) : data.payload;
-                    injectSinglePost(post);
-                }
-            } catch (err) {
-                console.warn("[LoliCordOfficialDM] Error parsing streaming message:", err);
-            }
-        };
-
-        ws.onerror = () => {
-            streamUrlIdx++;
-        };
-
-        ws.onclose = () => {
-            streamingSocket = null;
-            if (!settings.store.isDmClosed) {
-                if (reconnectTimer) clearTimeout(reconnectTimer);
-                wsRetryCount++;
-                const delay = Math.min(30000 * Math.pow(1.5, Math.min(wsRetryCount, 4)), 120000);
-                reconnectTimer = setTimeout(connectMastodonStreaming, delay);
-            }
-        };
-    } catch (e) {
-        streamingSocket = null;
-        if (reconnectTimer) clearTimeout(reconnectTimer);
-        wsRetryCount++;
-        const delay = Math.min(30000 * Math.pow(1.5, Math.min(wsRetryCount, 4)), 120000);
-        reconnectTimer = setTimeout(connectMastodonStreaming, delay);
-    }
-}
-
-function disconnectMastodonStreaming() {
-    if (reconnectTimer) {
-        clearTimeout(reconnectTimer);
-        reconnectTimer = null;
-    }
-    if (streamingSocket) {
-        try { streamingSocket.close(); } catch {}
-        streamingSocket = null;
-    }
-}
-
-async function fetchMastodonFeed(): Promise<any[]> {
-    const netFetch = (window as any).VencordNative?.lolicord?.netFetch;
-    for (const url of API_URLS) {
-        try {
-            if (typeof netFetch === "function") {
-                const res = await netFetch(url, { timeout: 3000 });
-                if (res?.ok && Array.isArray(res.data) && res.data.length > 0) return res.data;
-            } else {
-                const controller = new AbortController();
-                const to = setTimeout(() => controller.abort(), 3000);
-                const res = await fetch(url, { signal: controller.signal }).catch(() => null);
-                clearTimeout(to);
-                if (res && res.ok) {
-                    const data = await res.json().catch(() => null);
-                    if (Array.isArray(data) && data.length > 0) return data;
-                }
-            }
-        } catch {}
-    }
-    return [];
 }
 
 // ─── Urgent Message Modal (System Alert for LoliCord Messages) ──────────────
@@ -767,11 +629,60 @@ export function openUrgentMessageModal() {
     ));
 }
 
+function removeMessage(id: string) {
+    knownPostIds.delete(id);
+    try {
+        FluxDispatcher.dispatch({ type: "MESSAGE_DELETE", channelId: LOLICORD_CHANNEL_ID, id });
+    } catch {}
+}
+
+function removeDeletedAnnouncements(current: Announcement[]) {
+    const currentIds = new Set(current.map(a => a.id));
+    for (const id of [...knownPostIds]) {
+        if (!currentIds.has(id)) removeMessage(id);
+    }
+}
+
+const isCurrentUserOwner = () => isLoliCordOwner(UserStore.getCurrentUser()?.id);
+
+function openOwnerComposer() {
+    openAnnouncementModal(announcement => injectSinglePost(announcement));
+}
+
+async function deleteOwnAnnouncement(id: string) {
+    const token = await getGithubToken();
+    if (!token) {
+        showToast(t("Publish an announcement once to save your GitHub token."), Toasts.Type.FAILURE);
+        return;
+    }
+    try {
+        await deleteAnnouncement(token, id);
+        removeMessage(id);
+        showToast(t("Announcement deleted"), Toasts.Type.SUCCESS);
+    } catch (e: any) {
+        showToast(e?.message ?? String(e), Toasts.Type.FAILURE);
+    }
+}
+
+const messageContextMenuPatch: NavContextMenuPatchCallback = (children, { message }) => {
+    if (message?.channel_id !== LOLICORD_CHANNEL_ID || !isCurrentUserOwner()) return;
+    children.push(
+        <Menu.MenuItem
+            id="lolicord-delete-announcement"
+            label={t("Delete announcement")}
+            color="danger"
+            action={() => deleteOwnAnnouncement(String(message.id))}
+        />
+    );
+};
+
 async function checkAndInjectPosts(isInitialLoad = false) {
     if (settings.store.isDmClosed) return;
     try {
-        const posts = await fetchMastodonFeed();
-        if (!Array.isArray(posts) || posts.length === 0) return;
+        const posts = await fetchAnnouncements();
+        if (!posts) return;
+        removeDeletedAnnouncements(posts);
+        if (posts.length === 0) return;
 
         const previousLastTs = Number(getItemSafe(LS_LAST_TS) || 0);
         const previousLastSeenId = getItemSafe(LS_LAST_SEEN);
@@ -949,24 +860,36 @@ export function LoliCordSystemBanner() {
                     </div>
                 </div>
             </div>
-            <button
-                className="lolicord-official-banner-btn"
-                onClick={() => window.open("https://nightcord.st", "_blank")}
-            >
-                En savoir plus
-            </button>
+            {isCurrentUserOwner()
+                ? (
+                    <button className="lolicord-official-banner-btn" onClick={openOwnerComposer}>
+                        {t("Write an announcement")}
+                    </button>
+                )
+                : (
+                    <button
+                        className="lolicord-official-banner-btn"
+                        onClick={() => window.open("https://github.com/ownhoye/hoye-bot-discord", "_blank")}
+                    >
+                        En savoir plus
+                    </button>
+                )}
         </div>
     );
 }
 
 export default definePlugin({
     name: "LoliCordOfficialDM",
-    description: "Official LoliCord System DM channel with verified badge and Mastodon feed integration",
+    description: "Official LoliCord System DM channel with announcements from the LoliCord owner",
     enabledByDefault: true,
     required: true,
     startAt: StartAt.WebpackReady,
     authors: [{ name: "Nightcord", id: 0n }],
     settings,
+
+    contextMenus: {
+        "message": messageContextMenuPatch
+    },
 
     flux: {
         CHANNEL_DELETE: handleChannelClose,
@@ -1678,8 +1601,7 @@ export default definePlugin({
         setTimeout(() => {
             isAppLoaded = true;
             checkAndInjectPosts(true);
-            connectMastodonStreaming();
-            pollInterval = setInterval(() => checkAndInjectPosts(false), 300000);
+            pollInterval = setInterval(() => checkAndInjectPosts(false), 120000);
         }, 1000);
         }, 500); // end deferred startup — all store patches run after first paint + CONNECTION_OPEN
     },
@@ -1689,7 +1611,6 @@ export default definePlugin({
             clearInterval(pollInterval);
             pollInterval = null;
         }
-        disconnectMastodonStreaming();
         window.removeEventListener("click", handleGlobalClick, true);
         stopDomObserver();
 

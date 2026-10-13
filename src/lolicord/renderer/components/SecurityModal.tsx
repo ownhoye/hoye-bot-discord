@@ -80,15 +80,15 @@ export function SecurityModal(props: ModalProps) {
                     </Flex>
                     <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                         <li style={{ marginBottom: "6px", color: "var(--text-normal)" }}>
-                            <strong>owner:</strong> ahki__
+                            <strong>owner:</strong> ownhoye
                         </li>
                         <li style={{ color: "var(--text-normal)" }}>
                             <strong>Support &amp; Community:</strong>{" "}
                             <span
                                 style={{ color: "var(--text-link)", cursor: "pointer" }}
-                                onClick={() => VencordNative.native.openExternal("https://discord.gg/nightcord")}
+                                onClick={() => VencordNative.native.openExternal("https://github.com/ownhoye/hoye-bot-discord/issues")}
                             >
-                                discord.gg/nightcord
+                                github.com/ownhoye/hoye-bot-discord
                             </span>
                         </li>
                     </ul>

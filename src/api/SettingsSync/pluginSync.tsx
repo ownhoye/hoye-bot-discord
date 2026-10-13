@@ -29,7 +29,7 @@ export async function clearPluginSyncToken() {
 }
 
 // ─── CORS-safe fetch helper ───────────────────────────────────────────────────
-// Routes through Electron main-process net.fetch to bypass CORS on api.nightcord.st.
+// Routes through Electron main-process net.fetch to bypass CORS.
 // Falls back to renderer fetch when running in web/browser context.
 async function netFetch(url: string, opts?: { method?: string; headers?: Record<string, string>; body?: string; noCache?: boolean; }): Promise<{ ok: boolean; status: number; data: unknown; } | null> {
     const nf = (window as any).VencordNative?.lolicord?.netFetch;

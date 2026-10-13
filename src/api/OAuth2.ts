@@ -4,51 +4,26 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-export const API_BASE = "https://api.nightcord.st";
+// The LoliCord account API was hosted by Nightcord (api.nightcord.st). LoliCord no longer
+// talks to that server, so these helpers keep their signatures but never reach the network.
+export const API_BASE = "";
+export const LOLICORD_ACCOUNT_UNAVAILABLE = "LoliCord accounts are not available.";
 
-import { openModal } from "@utils/modal";
-import { OAuth2AuthorizeModal, React } from "@webpack/common";
 import * as DataStore from "./DataStore";
 
 export const OAUTH_TOKEN_KEY = "lolicord_oauth_token";
 
-/** Route a GET request through Electron main process to bypass CORS. */
-async function netGet(url: string): Promise<any> {
-    const nf = (window as any).VencordNative?.lolicord?.netFetch;
-    if (typeof nf === "function") {
-        const res = await nf(url);
-        if (!res?.ok) throw new Error(`HTTP ${res?.status ?? "error"}`);
-        return res.data;
-    }
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return res.json();
+export async function beginDiscordOAuth(_state?: string): Promise<{ url: string; redirectUri: string; scopes: string[]; }> {
+    throw new Error(LOLICORD_ACCOUNT_UNAVAILABLE);
 }
 
-export async function beginDiscordOAuth(state?: string) {
-    const url = new URL(`${API_BASE}/api/oauth2/signing`);
-    if (state) {
-        url.searchParams.set("state", state);
-    }
-
-    return netGet(url.toString()) as Promise<{
-        url: string;
-        redirectUri: string;
-        scopes: string[];
-    }>;
+export async function checkOAuthToken(_token: string): Promise<any> {
+    return null;
 }
 
-export async function checkOAuthToken(token: string) {
-    try {
-        return await netGet(`${API_BASE}/api/oauth2/check?token=${encodeURIComponent(token)}`);
-    } catch (e) {
-        console.error("Failed to check OAuth token:", e);
-        return null;
-    }
-}
-
+/** Always null: tokens from the old Nightcord account API are never reused. */
 export async function getStoredToken(): Promise<string | null> {
-    return (await DataStore.get(OAUTH_TOKEN_KEY)) || null;
+    return null;
 }
 
 export async function storeToken(token: string) {
@@ -60,57 +35,5 @@ export async function clearToken() {
 }
 
 export async function authorizeUser(): Promise<string | null> {
-    const existing = await getStoredToken();
-    if (existing) {
-        const check = await checkOAuthToken(existing);
-        if (check) return existing;
-    }
-
-    let clientId: string;
-    let redirectUri: string;
-    let scopes: string[];
-
-    try {
-        const signing = await beginDiscordOAuth();
-        const authUrl = new URL(signing.url);
-        clientId = authUrl.searchParams.get("client_id")!;
-        redirectUri = signing.redirectUri;
-        scopes = signing.scopes ?? ["identify"];
-    } catch (e) {
-        console.error("[OAuth2] Failed to start OAuth flow:", e);
-        return null;
-    }
-
-    return new Promise<string | null>(resolve => {
-        openModal((props: any) =>
-            React.createElement(OAuth2AuthorizeModal, {
-                ...props,
-                scopes,
-                responseType: "code",
-                redirectUri,
-                permissions: 0n,
-                clientId,
-                cancelCompletesFlow: false,
-                callback: async ({ location }: any) => {
-                    if (!location) {
-                        resolve(null);
-                        return;
-                    }
-                    try {
-                        const res = await fetch(location, { headers: { Accept: "application/json" } });
-                        const data = await res.json();
-                        if (data.token) {
-                            await storeToken(data.token);
-                            resolve(data.token);
-                        } else {
-                            resolve(null);
-                        }
-                    } catch (e) {
-                        console.error("[OAuth2] Failed to exchange token:", e);
-                        resolve(null);
-                    }
-                }
-            })
-        );
-    });
+    return null;
 }

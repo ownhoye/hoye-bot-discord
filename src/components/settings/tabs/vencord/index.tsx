@@ -116,7 +116,7 @@ function DevTeamSection() {
                 <QuickAction
                     Icon={WebsiteIcon}
                     text={t("Website")}
-                    action={() => (typeof VencordNative !== "undefined" && VencordNative?.native?.openExternal) ? VencordNative.native.openExternal("https://nightcord.st") : window.open("https://nightcord.st", "_blank")}
+                    action={() => (typeof VencordNative !== "undefined" && VencordNative?.native?.openExternal) ? VencordNative.native.openExternal("https://github.com/ownhoye/hoye-bot-discord/releases") : window.open("https://github.com/ownhoye/hoye-bot-discord/releases", "_blank")}
                 />
                 {!IS_WEB && (
 

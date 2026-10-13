@@ -1,5 +1,5 @@
 /*
- * Vencord, a Discord client mod
+ * LoliCord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -19,7 +19,6 @@ import { changes, checkForUpdates, rebuild, update, UpdateLogger } from "@utils/
 import { React, useState } from "@webpack/common";
 import { Toasts } from "@webpack/common";
 import { t } from "@api/i18n";
-import {domain} from "../../../../../DOMAIN.json";
 
 // Version locale depuis package.json (injectée au build)
 declare const VERSION: string;
@@ -70,7 +69,7 @@ function UpdaterTab() {
         try {
             // Update & build triggers our new ASAR overwrite
             await update();
-            await rebuild();
+            if (!await rebuild()) throw new Error("the update could not be installed");
 
             Toasts.show({
                 message: "Update successful! Restarting...",
@@ -110,8 +109,8 @@ function UpdaterTab() {
                     <div>
                         <Span size="sm" color="text-subtle">{t("Website")}</Span>
                         <div>
-                            <Link href={`https://${domain}`} style={{ fontSize: 13 }}>
-                                {domain}
+                            <Link href="https://github.com/ownhoye/hoye-bot-discord/releases" style={{ fontSize: 13 }}>
+                                GitHub
                             </Link>
                         </div>
                     </div>
@@ -157,7 +156,7 @@ function UpdaterTab() {
                         onClick={handleUpdate}
                         disabled={downloading}
                     >
-                        {downloading ? "Installing..." : "🚀 Update Now (Automatic)"}
+                        {downloading ? "Installing..." : "Update Now (Automatic)"}
                     </Button>
                 )}
             </Flex>

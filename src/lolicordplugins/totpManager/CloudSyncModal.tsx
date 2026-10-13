@@ -144,7 +144,7 @@ export function CloudSyncModal({ initialMode = "sync", onClose, onCompleted }: C
                             {t("LoliCord 2FA Cloud Vault")}
                         </Heading>
                         <Paragraph size="xs" color="text-muted">
-                            {t("Zero-Knowledge End-to-End Encryption (cloud.nightcord.st)")}
+                            {t("Zero-Knowledge End-to-End Encryption")}
                         </Paragraph>
                     </div>
                 </div>

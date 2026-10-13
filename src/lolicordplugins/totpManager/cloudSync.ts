@@ -55,13 +55,14 @@ import {
 import { checkOAuthToken as checkRootOAuthToken, getStoredToken } from "@api/OAuth2";
 import { putCloudSettings } from "@api/SettingsSync/cloudSync";
 
-const API_BASES = ["https://api.nightcord.st", "https://cloud.nightcord.st"];
+// The Nightcord PluginSync servers are no longer used: the vault syncs through the
+// configured settings cloud only, and always stays available locally.
+const API_BASES: string[] = [];
 const PLUGIN_KEYS = ["totp-manager", "totpManager", "totp_manager"];
 
 // ─── CORS-safe fetch helper ───────────────────────────────────────────────────
-// Routes all api.nightcord.st / cloud.nightcord.st calls through Electron's
-// main-process net.fetch to bypass CORS restrictions. Falls back to renderer
-// fetch on web (non-Electron) contexts.
+// Routes calls through Electron's main-process net.fetch to bypass CORS
+// restrictions. Falls back to renderer fetch on web (non-Electron) contexts.
 async function netFetch(url: string, opts?: { method?: string; headers?: Record<string, string>; body?: string; }): Promise<{ ok: boolean; status: number; data: unknown; } | null> {
     const nf = (window as any).VencordNative?.lolicord?.netFetch;
     if (typeof nf === "function") {
@@ -90,15 +91,6 @@ export async function getValidCloudToken(promptAuth = false): Promise<string | n
     if (!token) {
         token = (await DataStore.get<string>("lolicord_oauth_token")) || undefined;
     }
-    if (!token) {
-        const secrets = await DataStore.get<any>("Vencord_cloudSecret");
-        if (secrets && typeof secrets === "object") {
-            const first = Object.values(secrets)[0];
-            if (typeof first === "string") token = first;
-        } else if (typeof secrets === "string") {
-            token = secrets;
-        }
-    }
 
     if (token) {
         try {
@@ -122,7 +114,7 @@ export async function getValidCloudToken(promptAuth = false): Promise<string | n
     return token || null;
 }
 
-// ─── Cloud Remote Interaction (api.nightcord.st / cloud.nightcord.st) ─────────
+// ─── Cloud Remote Interaction ───────────────────────────────────────────────────
 
 export async function pushEncryptedVaultToCloud(envelope: EncryptedVaultEnvelope): Promise<boolean> {
     await saveLocalVaultEnvelope(envelope);
@@ -187,7 +179,7 @@ export async function pushEncryptedVaultToCloud(envelope: EncryptedVaultEnvelope
 }
 
 export async function pullEncryptedVaultFromCloud(): Promise<EncryptedVaultEnvelope | null> {
-    // 1. Try Direct PluginSync API (api.nightcord.st / cloud.nightcord.st) — CORS-safe via netFetch
+    // 1. Try Direct PluginSync API — CORS-safe via netFetch
     try {
         const token = await getValidCloudToken(false);
         if (token) {

@@ -1297,9 +1297,10 @@ export async function uploadSoundCloudTrack(
 
 // ─── Listening Together ─────────────────────────────────────────────────────────────────
 // Electron : intercept navigation events on BrowserWindow
-// Browser extension : intercept clicks on <a> tags pointing to nightcord.st/listen
+// Browser extension : intercept clicks on <a> tags pointing to the LoliCord listen link
 
-const LISTEN_URL_PREFIX = "https://nightcord.st/listen?";
+// Opens the LoliCord download page for people without LoliCord
+const LISTEN_URL_PREFIX = "https://github.com/ownhoye/hoye-bot-discord/releases/latest?listen=1&";
 
 export function setupListeningTogetherHandler(_?: any): void {
     // no-op

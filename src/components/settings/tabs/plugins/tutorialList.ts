@@ -9,7 +9,7 @@
 
 /**
  * Maps a plugin's `name` to the basename (without extension) of its tutorial
- * video in https://source.nightcord.st/nightcord/nightcord-tutorials/src/branch/main/videos
+ * video in the tutorials repository
  */
 export const TUTORIAL_VIDEOS: ReadonlyMap<string, string> = new Map([
     ["Abbreviation", "Abbreviation"],

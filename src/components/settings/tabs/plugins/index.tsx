@@ -45,9 +45,7 @@ import { JSX } from "react";
 import { t } from "@api/i18n";
 
 import Plugins, { ExcludedPlugins, PluginMeta } from "~plugins";
-import { fetchPluginRatings, PluginRatings } from "@api/PluginLikes";
-import { authorizeLikeSystem, LIKE_AUTH_EVENT } from "@api/PluginLikesAuth";
-import { getStoredToken } from "@api/OAuth2";
+import type { PluginRatings } from "@api/PluginLikes";
 
 import { PluginCard } from "./PluginCard";
 import { openPluginModal, openResetDefaultsModal, openApplyBasicConfigModal, openWarningModal } from "./PluginModal";
@@ -332,37 +330,8 @@ export default function PluginSettings({ premiumOnly = false }: PluginSettingsPr
         return o;
     }, []);
 
-    const [ratings, setRatings] = React.useState<PluginRatings>({});
-    React.useEffect(() => {
-        fetchPluginRatings().then(setRatings).catch(() => {});
-    }, []);
-
-    const [isLikeLoggedIn, setIsLikeLoggedIn] = React.useState(true);
-    const [likeLoginLoading, setLikeLoginLoading] = React.useState(false);
-    React.useEffect(() => {
-        let cancelled = false;
-        const refresh = () => getStoredToken().then(token => { if (!cancelled) setIsLikeLoggedIn(!!token); });
-        refresh();
-        window.addEventListener(LIKE_AUTH_EVENT, refresh);
-        return () => {
-            cancelled = true;
-            window.removeEventListener(LIKE_AUTH_EVENT, refresh);
-        };
-    }, []);
-
-    const handleLikeLogin = useCallback(async () => {
-        if (likeLoginLoading) return;
-        setLikeLoginLoading(true);
-        try {
-            const token = await authorizeLikeSystem();
-            if (token) {
-                setIsLikeLoggedIn(true);
-                fetchPluginRatings(true).then(setRatings).catch(() => {});
-            }
-        } finally {
-            setLikeLoginLoading(false);
-        }
-    }, [likeLoginLoading]);
+    // Plugin likes relied on the Nightcord server, which LoliCord no longer uses
+    const ratings: PluginRatings = {};
 
     const sortedPlugins = useMemo(() => Object.values(Plugins)
         .filter(p => typeof p.name === "string")
@@ -861,16 +830,6 @@ export default function PluginSettings({ premiumOnly = false }: PluginSettingsPr
                         </div>
 
                         <div className={cl("ecosystem-banner-buttons")}>
-                            {!isLikeLoggedIn && (
-                                <Button
-                                    variant="primary"
-                                    size="small"
-                                    disabled={likeLoginLoading}
-                                    onClick={handleLikeLogin}
-                                >
-                                    {t("Log in to like")}
-                                </Button>
-                            )}
                             <Button
                                 variant="secondary"
                                 size="small"

@@ -77,8 +77,7 @@ const BLOCKED_DOMAINS = [
     "cdn.discordapp.com",
     "media.discordapp.net",
     "localhost",
-    "127.0.0.1",
-    "nightcord.st"
+    "127.0.0.1"
 ];
 
 function getIframeSrc(rawUrl: string): string {

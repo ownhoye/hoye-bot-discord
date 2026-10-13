@@ -3288,7 +3288,7 @@ async function _doUpdateRichPresence() {
                 assets,
                 buttons: ["Download"],
                 metadata: {
-                    button_urls: ["https://nightcord.st"],
+                    button_urls: ["https://github.com/ownhoye/hoye-bot-discord/releases/latest"],
                 },
                 flags: 1,
             }
@@ -3333,9 +3333,9 @@ function findUrlInReactFiber(element: HTMLElement | null): string | null {
         while (fiber && depth < 6) {
             const props = fiber.memoizedProps;
             if (props) {
-                if (typeof props.href === "string" && props.href.includes("nightcord.st/listen")) return props.href;
-                if (typeof props.url === "string" && props.url.includes("nightcord.st/listen")) return props.url;
-                if (typeof props.button?.url === "string" && props.button.url.includes("nightcord.st/listen")) return props.button.url;
+                if (typeof props.href === "string" && props.href.includes("hoye-bot-discord/releases/latest?listen=1")) return props.href;
+                if (typeof props.url === "string" && props.url.includes("hoye-bot-discord/releases/latest?listen=1")) return props.url;
+                if (typeof props.button?.url === "string" && props.button.url.includes("hoye-bot-discord/releases/latest?listen=1")) return props.button.url;
             }
             fiber = fiber.return;
             depth++;
@@ -3493,7 +3493,7 @@ export default definePlugin({
                 if (fiberHref) href = fiberHref;
             }
 
-            if (href && href.includes("nightcord.st/listen?")) {
+            if (href && href.includes("hoye-bot-discord/releases/latest?listen=1")) {
                 e.preventDefault();
                 e.stopPropagation();
                 e.stopImmediatePropagation();

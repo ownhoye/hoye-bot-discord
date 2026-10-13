@@ -22,11 +22,6 @@ export const CspPolicies: PolicyMap = {
     "localhost:*": ImageAndCssSrc,
     "127.0.0.1:*": ImageAndCssSrc,
 
-    "api.nightcord.st": ConnectSrc,
-    "https://api.nightcord.st": ConnectSrc,
-    "nightcord.st": ConnectSrc,
-    "*.nightcord.st": ConnectSrc,
-
     "*.github.io": ImageAndCssSrc,
     "github.com": ImageAndCssSrc,
     "raw.githubusercontent.com": ImageAndCssSrc,
@@ -218,7 +213,7 @@ export function initCsp() {
             const featurePolicyHeader = findHeader(responseHeaders, "feature-policy");
             if (featurePolicyHeader) delete responseHeaders[featurePolicyHeader];
 
-            if (url.includes("nightcord.st") || url.includes("vencord.dev") || url.includes("equicord.org")) {
+            if (url.includes("vencord.dev") || url.includes("equicord.org")) {
                 responseHeaders["access-control-allow-origin"] = ["*"];
                 responseHeaders["access-control-allow-methods"] = ["GET, POST, PUT, DELETE, OPTIONS"];
                 responseHeaders["access-control-allow-headers"] = ["*"];

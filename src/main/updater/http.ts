@@ -1,5 +1,5 @@
 /*
- * Vencord, a Discord client mod
+ * LoliCord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -7,9 +7,9 @@
 import { fetchBuffer, fetchJson } from "@main/utils/http";
 import { IpcEvents } from "@shared/IpcEvents";
 import { VENCORD_USER_AGENT } from "@shared/vencordUserAgent";
-import { exec } from "child_process";
+import { execFile } from "child_process";
 import { app, ipcMain } from "electron";
-import { existsSync, mkdirSync, promises as fsp, readFileSync, rmSync, writeFileSync } from "original-fs";
+import { existsSync, mkdirSync, promises as fsp, rmSync } from "original-fs";
 import { join } from "path";
 import { serializeErrors } from "./common";
 import { copyDirectorySync } from "./pendingUpdate";
@@ -22,8 +22,7 @@ const ZIP_FILE = "lolicord-dist.zip";
 
 /**
  * Marker file written into __dirname when an update has been staged.
- * lolicord-index.js reads this on next startup (before any file is locked)
- * and performs the actual file-swap then.
+ * patcher.ts reads it on next startup and re-applies the staged files.
  */
 export const PENDING_UPDATE_MARKER = join(__dirname, "lolicord-pending-update.json");
 const STAGING_DIR = join(app.getPath("temp"), "lolicord-pending-update");
@@ -77,75 +76,76 @@ async function getUpdates() {
     }];
 }
 
+function runFile(file: string, args: string[]) {
+    return new Promise<void>((resolve, reject) => {
+        execFile(file, args, { windowsHide: true }, err => err ? reject(err) : resolve());
+    });
+}
+
+async function extractZip(zipPath: string, destDir: string) {
+    if (process.platform !== "win32") return runFile("unzip", ["-o", "-q", zipPath, "-d", destDir]);
+
+    const quote = (p: string) => `'${p.replace(/'/g, "''")}'`;
+    try {
+        await runFile("powershell.exe", [
+            "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command",
+            `Expand-Archive -LiteralPath ${quote(zipPath)} -DestinationPath ${quote(destDir)} -Force`
+        ]);
+    } catch {
+        // tar.exe ships with Windows 10 1803+ and works where PowerShell is restricted
+        await runFile("tar.exe", ["-xf", zipPath, "-C", destDir]);
+    }
+}
+
 /**
- * Step 1 — download the zip and stage it to a temp folder.
- * Does NOT touch any running files. Returns true when the zip is staged.
+ * Downloads the release zip, extracts it, and copies it over the running install.
+ * Files that cannot be replaced now are re-applied on next startup through the marker.
+ * Throws with a readable reason on any failure, so the UI never reports a fake success.
  */
 async function stageUpdate(): Promise<boolean> {
-    // If update is already staged for this version on disk, skip redundant download
-    if (existsSync(PENDING_UPDATE_MARKER)) {
-        try {
-            const marker = JSON.parse(readFileSync(PENDING_UPDATE_MARKER, "utf-8"));
-            if (marker.stagingDir && existsSync(marker.stagingDir)) {
-                if (!pendingVersion || marker.version === pendingVersion) {
-                    console.log(`[LoliCordUpdater] Update ${marker.version} is already staged on disk. Skipping download.`);
-                    pendingDownloadUrl = null;
-                    pendingVersion = null;
-                    return true;
-                }
-            }
-        } catch { }
-    }
-
-    if (!pendingDownloadUrl) return false;
-    if (isApplying) return false;
+    if (isApplying) throw new Error("An update is already being installed.");
     isApplying = true;
 
+    const zipPath = join(app.getPath("temp"), `lolicord-update-${Date.now()}.zip`);
     try {
-        const data = await fetchBuffer(pendingDownloadUrl);
+        if (!pendingDownloadUrl && !(await fetchUpdates())) {
+            throw new Error("No update is available.");
+        }
 
-        // Save zip to temp
-        const zipPath = join(app.getPath("temp"), `lolicord-update-${Date.now()}.zip`);
+        const data = await fetchBuffer(pendingDownloadUrl!);
+        if (data.length < 1024) throw new Error("The downloaded update is empty.");
         await fsp.writeFile(zipPath, data);
 
-        // Clean any stale staging dir first
         try { rmSync(STAGING_DIR, { recursive: true, force: true }); } catch { }
         mkdirSync(STAGING_DIR, { recursive: true });
 
-        return await new Promise<boolean>((resolve, reject) => {
-            const extractCmd = process.platform === "win32"
-                ? `powershell -NoProfile -NonInteractive -Command "Expand-Archive -LiteralPath '${zipPath}' -DestinationPath '${STAGING_DIR}' -Force"`
-                : `unzip -o -q "${zipPath}" -d "${STAGING_DIR}"`;
+        try {
+            await extractZip(zipPath, STAGING_DIR);
+        } catch (err: any) {
+            throw new Error("Could not extract the update: " + (err?.message ?? err));
+        }
 
-            exec(extractCmd, async err => {
-                // Cleanup zip regardless
-                try { rmSync(zipPath, { force: true }); } catch { }
+        if (!existsSync(join(STAGING_DIR, "patcher.js"))) {
+            throw new Error("The update package is invalid (patcher.js missing).");
+        }
 
-                if (err) {
-                    return reject(new Error("ZIP extraction failed: " + err.message));
-                }
+        if (!copyDirectorySync(STAGING_DIR, __dirname)) {
+            throw new Error(`Could not copy the update into ${__dirname}.`);
+        }
 
-                // Attempt immediate copy for non-locked files (renderer, css, preload)
-                copyDirectorySync(STAGING_DIR, __dirname);
+        // Re-applied by patcher.ts on next startup for any file that was locked now
+        await fsp.writeFile(PENDING_UPDATE_MARKER, JSON.stringify({
+            version: pendingVersion,
+            stagingDir: STAGING_DIR,
+            destDir: __dirname,
+            createdAt: Date.now()
+        }));
 
-                // Write marker so patcher.ts double-checks and finalizes on next boot
-                try {
-                    await fsp.writeFile(PENDING_UPDATE_MARKER, JSON.stringify({
-                        version: pendingVersion,
-                        stagingDir: STAGING_DIR,
-                        destDir: __dirname,
-                        createdAt: Date.now()
-                    }));
-                } catch (markerErr) {
-                    return reject(markerErr);
-                }
-
-                pendingDownloadUrl = null;
-                pendingVersion = null;
-                resolve(true);
-            });
-        });
+        pendingDownloadUrl = null;
+        pendingVersion = null;
+        return true;
     } finally {
+        try { rmSync(zipPath, { force: true }); } catch { }
         isApplying = false;
     }
 }

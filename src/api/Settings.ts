@@ -170,7 +170,7 @@ const DefaultSettings: Settings = {
 
     cloud: {
         authenticated: false,
-        url: "https://api.nightcord.st/",
+        url: "https://api.vencord.dev/",
         settingsSync: false,
         settingsSyncVersion: 0
     },
@@ -184,9 +184,11 @@ if ((settings.plugins as any)?.EventLogs?.persistentLogs) {
     delete (settings.plugins as any).EventLogs.persistentLogs;
 }
 
-// Force migrate cloud URL to LoliCord if it's still Equicord
-if (settings.cloud && settings.cloud.url && settings.cloud.url.includes("equicord.org")) {
-    settings.cloud.url = "https://api.nightcord.st/";
+// The Nightcord cloud is no longer used: move remaining users to the Vencord cloud, signed out
+if (settings.cloud?.url?.includes("nightcord.st")) {
+    settings.cloud.url = "https://api.vencord.dev/";
+    settings.cloud.authenticated = false;
+    settings.cloud.settingsSync = false;
 }
 
 // LoliCord native defaults — defaultPlugins is always enabled, no external prefs file

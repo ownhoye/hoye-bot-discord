@@ -11,7 +11,7 @@
 
 </div>
 
-LoliCord is a fork of [Nightcord](https://source.nightcord.st/nightcord/nightcord), itself a fork of Equicord, which builds on top of Vencord. We stripped out the obfuscation, cleaned things up, added our own improvements, and kept what works. No bloat, no nonsense.
+LoliCord is a fork of Nightcord, itself a fork of Equicord, which builds on top of Vencord. We stripped out the obfuscation, cleaned things up, added our own improvements, and kept what works. No bloat, no nonsense.
 
 ---
 
@@ -112,7 +112,7 @@ https://github.com/ownhoye/hoye-bot-discord
 
 ## Credits
 
-LoliCord wouldn't exist without [Nightcord](https://source.nightcord.st/nightcord/nightcord), [Equicord](https://github.com/Equicord/Equicord) and [Vencord](https://github.com/Vendicated/Vencord). A huge chunk of what makes this work comes directly from their projects. We're fully aware of that and genuinely appreciate everything they've built — we're just taking it in a different direction. Big thanks to everyone who's contributed to both.
+LoliCord wouldn't exist without Nightcord, [Equicord](https://github.com/Equicord/Equicord) and [Vencord](https://github.com/Vendicated/Vencord). A huge chunk of what makes this work comes directly from their projects. We're fully aware of that and genuinely appreciate everything they've built — we're just taking it in a different direction. Big thanks to everyone who's contributed to both.
 
 ---
 

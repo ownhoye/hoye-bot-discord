@@ -1,7 +1,7 @@
 {
     "name": "lolicord",
     "private": "true",
-    "version": "1.29.6",
+    "version": "1.29.7",
     "description": "Everything Discord doesn't build, we create",
     "main": "dist/js/main.js",
     "homepage": "https://github.com/ownhoye/hoye-bot-discord",
@@ -19,7 +19,6 @@
         "buildAll": "pnpm buildStandalone && pnpm buildWebStandalone && pnpm run buildDesktop",
         "buildStandalone": "pnpm build --standalone",
         "buildDesktop": "tsx scripts/build/buildDesktop.mts",
-        "publishRelease": "node scripts/build/publish-gitea-release.mjs",
         "package": "pnpm run buildDesktop && pnpm run buildStandalone && electron-builder --config electron-builder.config.cjs",
         "package:dir": "pnpm run buildDesktop && pnpm run buildStandalone && electron-builder --config electron-builder.config.cjs --dir",
         "buildWeb": "node --require=./scripts/suppressExperimentalWarnings.js scripts/build/buildWeb.mjs",

@@ -49,7 +49,7 @@ async function checkForUpdates() {
         const localVersion = getLocalVersion();
         let data: any = null;
 
-        // Use main-process fetch to bypass CORS on source.nightcord.st
+        // Use main-process fetch to bypass CORS
         const nf = (window as any).VencordNative?.lolicord?.netFetch;
         if (typeof nf === "function") {
             const res = await nf(REMOTE_VERSION_URL);
@@ -105,7 +105,7 @@ function UpdateBanner() {
 
             setStatus("Downloaded! Extracting...");
             const buildRes: { ok: boolean; value?: boolean; error?: any; } = await ipc.rebuild();
-            if (!buildRes?.ok) {
+            if (!buildRes?.ok || buildRes.value === false) {
                 const errMsg = buildRes?.error?.message ?? JSON.stringify(buildRes?.error) ?? "Installation failed";
                 throw new Error(errMsg);
             }

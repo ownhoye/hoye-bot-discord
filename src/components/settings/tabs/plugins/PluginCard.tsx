@@ -6,9 +6,6 @@
 
 import { showNotice } from "@api/Notices";
 import { isPluginEnabled, pluginRequiresRestart, startDependenciesRecursive, startPlugin, stopPlugin } from "@api/PluginManager";
-import { fetchPluginRatings, togglePluginLike, PluginLikeData } from "@api/PluginLikes";
-import { LIKE_AUTH_EVENT } from "@api/PluginLikesAuth";
-import { getStoredToken } from "@api/OAuth2";
 import { CogWheel, InfoIcon } from "@components/Icons";
 import { AddonCard } from "@components/settings/AddonCard";
 import { classNameFactory } from "@utils/css";
@@ -20,14 +17,11 @@ import { HeadingPrimary } from "@components/Heading";
 import { Button } from "@components/Button";
 import { React, showToast, Text, Toasts, Tooltip, UserStore } from "@webpack/common";
 import { flushSettings, Settings } from "@api/Settings";
-import {domain} from "../../../../../DOMAIN.json";
 import { t } from "@api/i18n";
 import { tPlugin } from "@api/pluginI18n";
 import { detailedPluginDescriptions } from "@api/detailedPluginDescriptions";
 
-import { TUTORIAL_CACHE } from "./components/Common";
 import { openPluginModal } from "./PluginModal";
-import { getTutorialVideoName, TUTORIAL_PLUGIN_NAMES } from "./tutorialList";
 import { getPluginIcon } from "./pluginIcons";
 import { PluginMeta } from "~plugins";
 
@@ -52,45 +46,9 @@ interface PluginCardProps extends React.HTMLProps<HTMLDivElement> {
     onMouseLeave?: React.MouseEventHandler<HTMLDivElement>;
 }
 
-export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, onMouseLeave, isNew, hasTutorial }: PluginCardProps) {
+export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, onMouseLeave, isNew }: PluginCardProps) {
     const settings = (Settings.plugins[plugin.name] ??= {} as any);
     const isEnabled = () => isPluginEnabled(plugin.name);
-
-    const [likeData, setLikeData] = React.useState<PluginLikeData | null>(null);
-    const [likeLoading, setLikeLoading] = React.useState(false);
-    const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-
-    React.useEffect(() => {
-        let cancelled = false;
-        const load = async () => {
-            const token = await getStoredToken();
-            if (cancelled) return;
-            setIsLoggedIn(!!token);
-            const ratings = await fetchPluginRatings();
-            if (cancelled) return;
-            setLikeData(ratings[plugin.name] ?? { likes: 0, likedByMe: false });
-        };
-        load();
-        window.addEventListener(LIKE_AUTH_EVENT, load);
-        return () => {
-            cancelled = true;
-            window.removeEventListener(LIKE_AUTH_EVENT, load);
-        };
-    }, [plugin.name]);
-
-    async function handleLike(e: React.MouseEvent) {
-        e.stopPropagation();
-        if (!isLoggedIn || likeLoading) return;
-        setLikeLoading(true);
-        // Optimistic update
-        setLikeData(prev => prev ? {
-            likes: prev.likedByMe ? prev.likes - 1 : prev.likes + 1,
-            likedByMe: !prev.likedByMe,
-        } : null);
-        const result = await togglePluginLike(plugin.name);
-        if (result) setLikeData(result);
-        setLikeLoading(false);
-    }
 
     function doToggleEnabled() {
         const wasEnabled = isEnabled();
@@ -188,154 +146,6 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
         doToggleEnabled();
     }
 
-    const openTutorialVideo = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        const videoName = getTutorialVideoName(plugin.name) ?? plugin.name;
-        const videoUrl = `https://source.${domain}/lolicord/lolicord-tutorials/raw/branch/main/videos/${encodeURIComponent(videoName)}.mp4`;
-        const hasSettings = plugin.settings && Object.keys(plugin.settings).length > 0;
-
-        openModal(props => (
-            <ModalRoot {...props} size={ModalSize.DYNAMIC} className="nc-tutorial-modal">
-                <ModalHeader separator={false} style={{ padding: "24px 24px 18px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <div style={{ display: "flex", flexDirection: "column", flex: 1, gap: 8 }}>
-                        <Text variant="heading-xl/bold" style={{ color: "#ffffff", fontSize: "20px", fontWeight: 700, margin: 0 }}>
-                            {plugin.name} – {t("Tutorial")}
-                        </Text>
-                        <Text variant="text-sm/normal" style={{ color: "#949ba4", fontSize: "14px", margin: 0, paddingBottom: "6px" }}>
-                            {t("Watch full plugin guide and feature demonstration")}
-                        </Text>
-                    </div>
-                    <ModalCloseButton onClick={props.onClose} />
-                </ModalHeader>
-                <ModalContent style={{ padding: "6px 24px 20px" }}>
-                    <div style={{ width: "100%", aspectRatio: "16 / 9", borderRadius: "10px", overflow: "hidden", background: "#000000", border: "1px solid rgba(255, 255, 255, 0.08)" }}>
-                        <video
-                            src={videoUrl}
-                            controls
-                            autoPlay
-                            style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }}
-                            onError={e => {
-                                const el = e.currentTarget;
-                                el.style.display = "none";
-                                const msg = el.parentElement?.querySelector(".nc-video-error") as HTMLElement;
-                                if (msg) msg.style.display = "flex";
-                            }}
-                        />
-                        <div
-                            className="nc-video-error"
-                            style={{
-                                display: "none",
-                                flexDirection: "column",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                width: "100%",
-                                height: "100%",
-                                padding: "32px 16px",
-                                color: "#949ba4",
-                                gap: "8px",
-                                textAlign: "center"
-                            }}
-                        >
-                            <Text variant="text-md/medium" style={{ color: "#949ba4" }}>{t("No video tutorial available for this plugin.")}</Text>
-                        </div>
-                    </div>
-                </ModalContent>
-                <ModalFooter style={{ padding: "16px 24px" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-                        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                            <Button
-                                variant="secondary"
-                                size="small"
-                                onClick={() => VencordNative.native.openExternal(videoUrl)}
-                            >
-                                {t("Open in Browser")}
-                            </Button>
-                            <Button
-                                variant="secondary"
-                                size="small"
-                                onClick={() => {
-                                    VencordNative.clipboard.copy(videoUrl);
-                                    showToast(t("Video link copied to clipboard!"), Toasts.Type.SUCCESS);
-                                }}
-                            >
-                                {t("Copy Link")}
-                            </Button>
-                        </div>
-                        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                            {hasSettings && (
-                                <Button
-                                    variant="primary"
-                                    size="small"
-                                    onClick={() => {
-                                        props.onClose();
-                                        openPluginModal(plugin);
-                                    }}
-                                >
-                                    {t("Plugin Settings")}
-                                </Button>
-                            )}
-                            <Button
-                                variant="secondary"
-                                size="small"
-                                onClick={props.onClose}
-                            >
-                                {t("Close")}
-                            </Button>
-                        </div>
-                    </div>
-                </ModalFooter>
-            </ModalRoot>
-        ));
-    };
-
-    const sourceBadge = (
-        <Tooltip text={t("Show Tutorial")}>
-            {({ onMouseEnter, onMouseLeave }) => (
-                <button
-                    className="nc-badge-btn"
-                    onClick={openTutorialVideo}
-                    onMouseEnter={onMouseEnter}
-                    onMouseLeave={onMouseLeave}
-                >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
-                    </svg>
-                </button>
-            )}
-        </Tooltip>
-    );
-
-    const likeTooltip = !isLoggedIn ? t("Sign in to like plugins") : likeData?.likedByMe ? t("Unlike") : t("Like");
-    const canLike = isLoggedIn && !likeLoading;
-
-    const likeBadge = (
-        <Tooltip text={likeTooltip}>
-            {({ onMouseEnter, onMouseLeave }) => (
-                <button
-                    className={[
-                        "nc-badge-btn",
-                        likeData?.likedByMe && "nc-badge-liked",
-                        !isLoggedIn && "nc-badge-btn-disabled",
-                    ].filter(Boolean).join(" ")}
-                    onClick={e => { if (canLike) handleLike(e); else e.stopPropagation(); }}
-                    aria-disabled={!canLike}
-                    onMouseEnter={onMouseEnter}
-                    onMouseLeave={onMouseLeave}
-                >
-                    {likeData?.likedByMe ? (
-                        <svg aria-hidden="true" role="img" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
-                            <path fill="currentColor" d="M12.47 21.73a.92.92 0 0 1-.94 0C9.43 20.48 1 15.09 1 8.75A5.75 5.75 0 0 1 6.75 3c2.34 0 3.88.9 5.25 2.26A6.98 6.98 0 0 1 17.25 3 5.75 5.75 0 0 1 23 8.75c0 6.34-8.42 11.73-10.53 12.98Z" />
-                        </svg>
-                    ) : (
-                        <svg aria-hidden="true" role="img" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
-                            <path fill="currentColor" fillRule="evenodd" d="M12 8.07 10.6 6.7A5 5 0 0 0 6.75 5 3.75 3.75 0 0 0 3 8.75c0 2.32 1.59 4.76 3.87 6.96A31.87 31.87 0 0 0 12 19.67c1.2-.74 3.26-2.14 5.13-3.96 2.28-2.2 3.87-4.64 3.87-6.96A3.75 3.75 0 0 0 17.25 5a5 5 0 0 0-3.85 1.69L12 8.07Zm0-2.8A6.98 6.98 0 0 0 6.75 3 5.75 5.75 0 0 0 1 8.75c0 6.34 8.42 11.73 10.53 12.98.29.17.65.17.94 0C14.57 20.48 23 15.09 23 8.75A5.75 5.75 0 0 0 17.25 3c-2.34 0-3.88.9-5.25 2.26Z" clipRule="evenodd" />
-                        </svg>
-                    )}
-                </button>
-            )}
-        </Tooltip>
-    );
-
     const openInfoModal = (e: React.MouseEvent) => {
         e.stopPropagation();
         const rawDesc = plugin.detailedDescription 
@@ -383,12 +193,6 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
     const isLoliCord = !PluginMeta[plugin.name]?.userPlugin && !(plugin as any).isUserPlugin && (PluginMeta[plugin.name]?.folderName?.startsWith("src/lolicordplugins/") ?? false);
     const iconType = isLoliCord ? "lolicord" : "other";
 
-    // Le système de like ne s'applique qu'aux plugins LoliCord (pas Vencord/Equicord,
-    // pas User Plugins), et jamais aux plugins required (y compris ceux affichés comme
-    // required parce qu'une dépendance active en a besoin, d'où le check sur `disabled`).
-    const isLoliCordFolderPlugin = (PluginMeta[plugin.name]?.folderName?.startsWith("src/lolicordplugins/") ?? false) && !PluginMeta[plugin.name]?.userPlugin && !(plugin as any).isUserPlugin;
-    const canShowLikeBadge = isLoliCordFolderPlugin && !plugin.required && !disabled;
-
     function openCreditsModal() {
         openModal(props => (
             <ModalRoot {...props} size={ModalSize.SMALL}>
@@ -429,7 +233,7 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
             name={plugin.name}
             iconType={iconType}
             customIcon={PluginIcon}
-            sourceBadge={<>{hasTutorial && sourceBadge}{canShowLikeBadge && likeBadge}</>}
+            sourceBadge={<></>}
             description={tPlugin(plugin.description)}
             isNew={isNew}
             enabled={isEnabled()}
