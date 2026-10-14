@@ -1,0 +1,23 @@
+{
+    "name": "lolarchive",
+    "private": true,
+    "version": "1.0.0",
+    "description": "LolArchive - archiveur chiffre perso (.lol / .xxx)",
+    "main": "dist/main.js",
+    "license": "GPL-3.0-or-later",
+    "author": "LoliCord",
+    "scripts": {
+        "build": "node build.mjs",
+        "start": "node build.mjs && electron .",
+        "test": "node build.mjs && node --test test/*.test.mjs",
+        "typecheck": "tsc --noEmit",
+        "dist": "node build.mjs && electron-builder --config electron-builder.config.cjs"
+    },
+    "devDependencies": {
+        "@types/node": "^24.10.1",
+        "electron": "^41.0.3",
+        "electron-builder": "^26.8.1",
+        "esbuild": "^0.27.0",
+        "typescript": "^5.9.3"
+    }
+}
