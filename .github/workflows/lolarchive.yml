@@ -1,0 +1,73 @@
+name: Build & Release LolArchive
+
+on:
+  push:
+    branches:
+      - main
+      - "claude/**"   # build de test : l'installeur est téléchargeable dans l'onglet Actions
+    paths:
+      - "lolarchive/**"
+      - ".github/workflows/lolarchive.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write    # nécessaire pour créer la GitHub Release
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: lolarchive
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Test
+        run: npm test
+
+      - name: Build installer and portable exe
+        run: npm run dist
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+
+      - name: Read version
+        id: version
+        shell: pwsh
+        run: |
+          $v = (Get-Content package.json | ConvertFrom-Json).version
+          "version=$v" >> $env:GITHUB_OUTPUT
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LolArchive-${{ steps.version.outputs.version }}-windows
+          path: |
+            lolarchive/release/LolArchive Setup *.exe
+            lolarchive/release/LolArchive-*-portable.exe
+          if-no-files-found: error
+
+      - name: Publish GitHub Release
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: lolarchive-v${{ steps.version.outputs.version }}
+          name: LolArchive ${{ steps.version.outputs.version }}
+          target_commitish: ${{ github.sha }}
+          body: |
+            Archiveur perso .lol / .xxx chiffré (AES-256-GCM + ChaCha20-Poly1305).
+
+            - **LolArchive Setup ${{ steps.version.outputs.version }}.exe** : installeur, associe .lol et .xxx à l'app.
+            - **LolArchive-${{ steps.version.outputs.version }}-portable.exe** : version sans installation.
+          files: |
+            lolarchive/release/LolArchive Setup *.exe
+            lolarchive/release/LolArchive-*-portable.exe
